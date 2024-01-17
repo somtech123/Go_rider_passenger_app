@@ -16,7 +16,7 @@ class HomeDrawerHeader extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 15.h, bottom: 20.h),
-                  child: Icon(Icons.close),
+                  child: const Icon(Icons.close),
                 ),
               ],
             ),

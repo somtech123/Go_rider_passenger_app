@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_rider/ui/features/authentication/login/presentation/view/widget/login_body_view.dart';
+import 'package:go_rider/ui/features/authentication/signup/prsentation/view/widget/sign_up_body.dart';
 import 'package:go_rider/ui/shared/shared_widget/circular_container.dart';
 import 'package:go_rider/ui/shared/top_widget/full_top_widget.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class LoginScreen extends StatelessWidget {
                           child: FullTopBarWidget(
                             title: RichText(
                               text: TextSpan(
-                                  text: 'Login\n',
+                                  text: 'Sign up\n',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge!
@@ -74,7 +74,7 @@ class LoginScreen extends StatelessWidget {
                               height: height - 75.h,
                               width: width,
                               borderRaduis: 30.r,
-                              child: const LoginBodyView(),
+                              child: const SignUpBodyWidget(),
                             ),
                           ),
                         )

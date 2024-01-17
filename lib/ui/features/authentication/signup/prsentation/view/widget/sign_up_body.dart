@@ -10,10 +10,10 @@ import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/app_constant/app_string.dart';
 import 'package:go_router/go_router.dart';
 
-var log = getLogger('login');
+var log = getLogger('SignUPScreen');
 
-class LoginBodyView extends StatelessWidget {
-  const LoginBodyView({super.key});
+class SignUpBodyWidget extends StatelessWidget {
+  const SignUpBodyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,9 @@ class LoginBodyView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 30.h),
+          SizedBox(height: 50.h),
           Text(
-            AppStrings.enterEmail,
+            AppStrings.fullName,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -34,6 +34,19 @@ class LoginBodyView extends StatelessWidget {
           SizedBox(height: 10.h),
           const AppTextField(
             hintText: 'User Name',
+            prefixIcon: Icon(Icons.person),
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            AppStrings.enterPassword,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColor.darkColor),
+          ),
+          SizedBox(height: 20.h),
+          const AppTextField(
+            hintText: 'Email Address',
             prefixIcon: Icon(Icons.mail),
           ),
           SizedBox(height: 20.h),
@@ -49,23 +62,10 @@ class LoginBodyView extends StatelessWidget {
             hintText: 'Password',
             prefixIcon: Icon(Icons.lock),
           ),
-          SizedBox(height: 10.h),
-          Align(
-            alignment: Alignment.topRight,
-            child: InkWell(
-              child: Text(
-                AppStrings.forgetPassword,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: AppColor.greyColor),
-              ),
-            ),
-          ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 30.h),
           PrimaryButton(
             onPressed: () {},
-            label: AppStrings.siginIN,
+            label: AppStrings.siginup,
             bottomLeftRadius: 30.r,
             bottomRightRadius: 30.r,
             topLeftRadius: 30.r,
@@ -104,23 +104,23 @@ class LoginBodyView extends StatelessWidget {
               leading: SvgPicture.asset(
                 'assets/svgs/facebook.svg',
               )),
-          SizedBox(height: 10.h),
+          SizedBox(height: 20.h),
           Align(
             alignment: Alignment.center,
             child: RichText(
               text: TextSpan(
-                  text: "Don't have an account?",
+                  text: "Already have an account?",
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                       color: AppColor.greyColor),
                   children: [
                     TextSpan(
-                        text: ' Sign up',
+                        text: ' Sign in',
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            log.w('navigate to sign up screen');
-                            context.push('/signUp');
+                            log.w('navigate to login screen');
+                            context.replace('/login');
                           },
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontSize: 17,
@@ -129,7 +129,8 @@ class LoginBodyView extends StatelessWidget {
                             ))
                   ]),
             ),
-          )
+          ),
+          SizedBox(height: 50.h),
         ],
       ),
     ));
