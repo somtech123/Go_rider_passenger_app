@@ -66,10 +66,6 @@ class SignUpBodyWidget extends StatelessWidget {
           PrimaryButton(
             onPressed: () {},
             label: AppStrings.siginup,
-            bottomLeftRadius: 30.r,
-            bottomRightRadius: 30.r,
-            topLeftRadius: 30.r,
-            topRightRadius: 30.r,
           ),
           SizedBox(height: 25.h),
           Align(

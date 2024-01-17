@@ -1,71 +1,139 @@
-import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/view/widget/available_ride_widget.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/widget/home_screen_drawer.dart';
+import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_string.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  @override
+  void initState() {
+    super.initState();
 
-  double mapBottomPadding = 0.0;
+    BlocProvider.of<HomePageBloc>(context).add(RequestLocation());
+  }
 
   @override
   Widget build(BuildContext context) {
+    final HomePageBloc homeloc = BlocProvider.of<HomePageBloc>(context);
+
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-        title: Text(
-          AppStrings.home,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.blue,
+          title: Text(
+            AppStrings.home,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
         ),
-      ),
-      drawer: HomeScreenDrawer(),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            GoogleMap(
-              mapType: MapType.terrain,
-              padding: EdgeInsets.only(
-                  bottom: mapBottomPadding, top: 0, right: 0, left: 0),
-              initialCameraPosition: HomeScreen._kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                setState(() {
-                  mapBottomPadding = 250;
-                });
-              },
-            ),
-            // floatingActionButton: FloatingActionButton.extended(
-            //   onPressed: _goToTheLake,
-            //   label: const Text('To the lake!'),
-            //   icon: const Icon(Icons.directions_boat),
-            // ),
-          ],
+        drawer: const HomeScreenDrawer(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.all(20.h),
+          child: PrimaryButton(
+            onPressed: () {
+              context.push('/rideDetail');
+            },
+            label: AppStrings.bookRide,
+          ),
         ),
-      ),
-    );
+        body: BlocListener<HomePageBloc, HomePageState>(
+          listener: (context, state) {},
+          bloc: homeloc,
+          child: BlocBuilder<HomePageBloc, HomePageState>(
+            builder: (context, state) {
+              return state.currentLocation == null
+                  ? const Center(
+                      child: Text('Loading..'),
+                    )
+                  : SafeArea(
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            height: height,
+                            width: double.infinity,
+                            child: GoogleMap(
+                              mapType: MapType.terrain,
+                              initialCameraPosition: CameraPosition(
+                                  zoom: 14,
+                                  target: LatLng(
+                                      state.currentLocation!.latitude,
+                                      state.currentLocation!.longitude)),
+                              onMapCreated: (GoogleMapController controller) =>
+                                  state.mapController.complete(controller),
+                              markers: {
+                                Marker(
+                                    markerId: MarkerId('currentLocation'),
+                                    position: state.currentLocation!,
+                                    icon: BitmapDescriptor.defaultMarker)
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            top: 10.h,
+                            left: 50.w,
+                            child: SizedBox(
+                              width: 300,
+                              child: Column(
+                                children: [
+                                  CupertinoFormSection.insetGrouped(
+                                    margin: EdgeInsets.zero,
+                                    clipBehavior: Clip.antiAlias,
+                                    // decoration: BoxDecoration(
+                                    //   borderRadius: BorderRadius.circular(22.r),
+                                    // ),
+                                    children: [
+                                      CupertinoTextFormFieldRow(
+                                          placeholder: 'PPP'),
+                                      CupertinoTextFormFieldRow(
+                                          placeholder: 'PPP'),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  CupertinoFormSection.insetGrouped(
+                                    margin: EdgeInsets.zero,
+                                    clipBehavior: Clip.antiAlias,
+                                    // decoration: BoxDecoration(
+                                    //   borderRadius: BorderRadius.circular(22.r),
+                                    // ),
+                                    children: [
+                                      CupertinoTextFormFieldRow(
+                                          placeholder: 'PPP'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 100.0.h,
+                            child: AvailableRideWideget(),
+                          )
+                        ],
+                      ),
+                    );
+            },
+          ),
+        ));
   }
 }

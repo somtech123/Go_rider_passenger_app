@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/app_constant/app_constant.dart';
 import 'package:go_rider/utils/utils/responsive_ui.dart';
@@ -58,18 +59,18 @@ class PrimaryButton extends StatelessWidget {
               ? RoundedRectangleBorder(
                   side: BorderSide.none,
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(topLeftRadius ?? 15.0),
-                      bottomLeft: Radius.circular(bottomLeftRadius ?? 115.0),
-                      bottomRight: Radius.circular(bottomRightRadius ?? 15.0),
-                      topRight: Radius.circular(topRightRadius ?? 15.0)))
+                      topLeft: Radius.circular(topLeftRadius ?? 30.r),
+                      bottomLeft: Radius.circular(bottomLeftRadius ?? 30.r),
+                      bottomRight: Radius.circular(bottomRightRadius ?? 30.r),
+                      topRight: Radius.circular(topRightRadius ?? 30.r)))
               : RoundedRectangleBorder(
                   side: BorderSide(
                       width: 1.0, color: borderColor ?? Colors.transparent),
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(topLeftRadius ?? 15.0),
-                      bottomLeft: Radius.circular(bottomLeftRadius ?? 15.0),
-                      bottomRight: Radius.circular(bottomRightRadius ?? 15.0),
-                      topRight: Radius.circular(topRightRadius ?? 15.0))),
+                      topLeft: Radius.circular(topLeftRadius ?? 30.r),
+                      bottomLeft: Radius.circular(bottomLeftRadius ?? 30.r),
+                      bottomRight: Radius.circular(bottomRightRadius ?? 30.r),
+                      topRight: Radius.circular(topRightRadius ?? 30.r))),
         ),
         elevation: changeButtonStyle<double>(0.0),
       ),

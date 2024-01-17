@@ -64,12 +64,10 @@ class LoginBodyView extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           PrimaryButton(
-            onPressed: () {},
+            onPressed: () {
+              context.replace('/homePage');
+            },
             label: AppStrings.siginIN,
-            bottomLeftRadius: 30.r,
-            bottomRightRadius: 30.r,
-            topLeftRadius: 30.r,
-            topRightRadius: 30.r,
           ),
           SizedBox(height: 25.h),
           Align(

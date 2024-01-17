@@ -11,4 +11,6 @@ class AppStrings {
   static const String connect = 'Or Connect With';
   static const String facebookConnect = 'Connect With Facebook';
   static const String googleConnect = 'Connect With Google';
+
+  static const String bookRide = 'Book Ride';
 }
