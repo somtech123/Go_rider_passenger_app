@@ -6,7 +6,7 @@ class AppRouter {
   static final router = GoRouter(
     navigatorKey: NavigationService.navigatorKey,
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+      GoRoute(path: '/', builder: (context, state) => HomeScreen()),
     ],
   );
 }
