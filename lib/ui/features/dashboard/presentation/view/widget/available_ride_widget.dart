@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
+import 'package:go_rider/utils/utils/currency_formater.dart';
 
 class AvailableRideWideget extends StatelessWidget {
   const AvailableRideWideget({super.key});
@@ -8,7 +10,7 @@ class AvailableRideWideget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150.w,
+      height: 200.h,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -17,7 +19,12 @@ class AvailableRideWideget extends StatelessWidget {
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(left: 5.h, right: 5.h),
-              child: const AvailableRideContainer(),
+              child: AvailableRideContainer(
+                vehicleName: 'Mercedes-Benz',
+                vehiclePlate: 'DL-2473854',
+                type: '3 Person Can Ride',
+                price: CurrencyUtils.formatCurrency.format(double.parse('340')),
+              ),
             );
           }),
     );
@@ -25,13 +32,21 @@ class AvailableRideWideget extends StatelessWidget {
 }
 
 class AvailableRideContainer extends StatelessWidget {
-  const AvailableRideContainer({super.key});
-
+  const AvailableRideContainer(
+      {super.key,
+      required this.vehicleName,
+      required this.vehiclePlate,
+      required this.price,
+      required this.type});
+  final String vehicleName;
+  final String vehiclePlate;
+  final String type;
+  final String price;
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       child: Container(
-        width: 150.w,
+        width: 230.w,
         padding: EdgeInsets.only(top: 10.h),
         decoration: BoxDecoration(
           color: AppColor.primaryColor,
@@ -39,30 +54,41 @@ class AvailableRideContainer extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Mercedes-Benz',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: 16, color: AppColor.whiteColor),
+              vehicleName,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 18,
+                  color: AppColor.whiteColor,
+                  fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 5.h),
             Text(
-              'Mercedes-Benz',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: 14, color: AppColor.whiteColor),
+              vehiclePlate,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 14,
+                  color: AppColor.whiteColor,
+                  fontWeight: FontWeight.w500),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 5.h),
             Text(
-              'Mercedes-Benz',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: 14, color: AppColor.whiteColor),
+              type,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 14,
+                  color: AppColor.whiteColor,
+                  fontWeight: FontWeight.w500),
+            ),
+            SvgPicture.asset(
+              'assets/svgs/car.svg',
+              height: 95.h,
+            ),
+            Text(
+              price,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 14,
+                  color: AppColor.whiteColor,
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/main.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_router/go_router.dart';
@@ -26,10 +28,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppColor.primaryColor,
       body: SafeArea(
-        child: Column(),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 100.h),
+              Container(
+                height: 140.h,
+                width: 160.w,
+                alignment: Alignment.center,
+                child: SvgPicture.asset(
+                  'assets/svgs/logo.svg',
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

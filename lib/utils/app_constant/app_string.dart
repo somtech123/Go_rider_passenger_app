@@ -13,4 +13,12 @@ class AppStrings {
   static const String googleConnect = 'Connect With Google';
 
   static const String bookRide = 'Book Ride';
+
+  static const String acount = 'Account';
+  static const String privacy = 'Privacy';
+  static const String histroy = 'History';
+  static const String local = 'App Language';
+  static const String help = 'Help';
+  static const String invite = 'Invite a Friend';
+  static const String logout = 'Log out';
 }

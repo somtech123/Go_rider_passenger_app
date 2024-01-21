@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/utils/device_utils.dart';
 
 class FullTopBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -15,6 +16,7 @@ class FullTopBarWidget extends StatelessWidget implements PreferredSizeWidget {
         vertical: 16.h,
       ),
       child: AppBar(
+        backgroundColor: AppColor.primaryColor,
         title: title,
         automaticallyImplyLeading: false,
       ),
