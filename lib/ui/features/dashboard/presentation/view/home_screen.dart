@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   CupertinoFormSection.insetGrouped(
                                     margin: EdgeInsets.zero,
-                                    clipBehavior: Clip.antiAlias,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
                                     // decoration: BoxDecoration(
                                     //   borderRadius: BorderRadius.circular(22.r),
                                     // ),
