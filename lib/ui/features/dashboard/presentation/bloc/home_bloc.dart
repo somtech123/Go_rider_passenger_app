@@ -15,9 +15,14 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   final Location _locationctr = Location();
 
   HomePageBloc()
-      : super(HomePageState(mapController: Completer<GoogleMapController>())) {
+      : super(HomePageState(
+            mapController: Completer<GoogleMapController>(), activeIndex: 0)) {
     on<RequestLocation>((event, emit) async {
       await getLocationUpdate();
+    });
+
+    on<UpdateRideIndex>((event, emit) {
+      updateRideIndex(event.activeIndex);
     });
   }
 
@@ -64,5 +69,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         log.w('${currentLocation.latitude}  ${currentLocation.longitude}');
       }
     });
+  }
+
+  updateRideIndex(int index) {
+    emit(state.copyWith(activeIndex: index));
   }
 }

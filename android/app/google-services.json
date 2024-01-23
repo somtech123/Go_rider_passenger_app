@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "565785021704",
+    "project_id": "go-rider-8c377",
+    "storage_bucket": "go-rider-8c377.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:565785021704:android:c6636af028a9f73ff9b0bd",
+        "android_client_info": {
+          "package_name": "com.example.go_rider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp53MzeHQwRWEKzKtMndzO6PQH_JAB9f0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

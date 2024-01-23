@@ -138,26 +138,78 @@ class _HomeScreenState extends State<HomeScreen> {
                                   CupertinoFormSection.insetGrouped(
                                     margin: EdgeInsets.zero,
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    // decoration: BoxDecoration(
-                                    //   borderRadius: BorderRadius.circular(22.r),
-                                    // ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(22),
+                                    ),
                                     children: [
                                       CupertinoTextFormFieldRow(
-                                          placeholder: 'PPP'),
+                                          textAlign: TextAlign.center,
+                                          prefix: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SvgPicture.asset(
+                                                  'assets/svgs/from.svg'),
+                                              SizedBox(width: 5.w),
+                                              Text(
+                                                'From:',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall!
+                                                    .copyWith(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColor.darkColor),
+                                              )
+                                            ],
+                                          ),
+                                          placeholder: 'Your Location'),
                                       CupertinoTextFormFieldRow(
-                                          placeholder: 'PPP'),
+                                        placeholder: 'Your Destination',
+                                        textAlign: TextAlign.center,
+                                        prefix: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/svgs/to.svg'),
+                                            SizedBox(width: 5.w),
+                                            Text(
+                                              'To:',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          AppColor.darkColor),
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 10.h),
                                   CupertinoFormSection.insetGrouped(
                                     margin: EdgeInsets.zero,
                                     clipBehavior: Clip.antiAlias,
-                                    // decoration: BoxDecoration(
-                                    //   borderRadius: BorderRadius.circular(22.r),
-                                    // ),
                                     children: [
-                                      CupertinoTextFormFieldRow(
-                                          placeholder: 'PPP'),
+                                      CupertinoFormRow(
+                                        child: SvgPicture.asset(
+                                            'assets/svgs/to.svg'),
+                                        prefix: Text(
+                                          'When',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColor.darkColor),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -166,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Positioned(
                             bottom: 100.0.h,
-                            child: AvailableRideWideget(),
+                            child: const AvailableRideWideget(),
                           )
                         ],
                       ),
