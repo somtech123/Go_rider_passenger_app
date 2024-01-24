@@ -23,7 +23,6 @@ class SignUpScreen extends StatelessWidget {
           child: SizedBox(
             height: height,
             width: width,
-            // flex: 1,
             child: Column(
               children: [
                 Flexible(

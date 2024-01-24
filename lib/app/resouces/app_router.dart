@@ -1,3 +1,4 @@
+import 'package:go_rider/app/resouces/app_transition.dart';
 import 'package:go_rider/app/resouces/navigation_services.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/view/login_screen.dart';
 import 'package:go_rider/ui/features/authentication/signup/prsentation/view/sign_up_screen.dart';
@@ -14,14 +15,23 @@ class AppRouter {
     navigatorKey: NavigationService.navigatorKey,
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
-      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
-          path: '/homePage', builder: (context, state) => const HomeScreen()),
+          path: '/login',
+          pageBuilder: (context, state) => CustomSlideTransition(
+              child: const LoginScreen(), key: state.pageKey)),
       GoRoute(
-          path: '/signUp', builder: (context, state) => const SignUpScreen()),
+          path: '/homePage',
+          pageBuilder: (context, state) => CustomNormalPageTransition(
+              child: const HomeScreen(), key: state.pageKey)),
+      GoRoute(
+        path: '/signUp',
+        pageBuilder: (context, state) => CustomSlideTransition(
+            key: state.pageKey, child: const SignUpScreen()),
+      ),
       GoRoute(
           path: '/rideDetail',
-          builder: (context, state) => const RideDetailScreen()),
+          pageBuilder: (context, state) => CustomSlideTransition(
+              child: const RideDetailScreen(), key: state.pageKey)),
       GoRoute(
           path: '/historyPage',
           builder: (context, state) => const HistoryScreen()),

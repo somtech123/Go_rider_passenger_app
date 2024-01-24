@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
+import 'package:go_rider/utils/app_constant/app_string.dart';
 import 'package:go_rider/utils/utils/currency_formater.dart';
+import 'package:go_router/go_router.dart';
+
+var log = getLogger('availableride');
 
 class AvailableRideWideget extends StatefulWidget {
   const AvailableRideWideget({super.key});
@@ -24,32 +30,48 @@ class _AvailableRideWidegetState extends State<AvailableRideWideget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200.h,
-      width: MediaQuery.of(context).size.width,
-      child: PageView.builder(
-        controller: pageController,
-        itemCount: 15,
-        scrollDirection: Axis.horizontal,
-        onPageChanged: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-        },
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(left: 10.h, right: 10.h),
-            child: AvailableRideContainer(
-              vehicleName: 'Mercedes-Benz',
-              vehiclePlate: 'DL-2473854',
-              type: '3 Person Can Ride',
-              activeIndex: index,
-              currentIndex: currentIndex,
-              price: CurrencyUtils.formatCurrency.format(double.parse('340')),
-            ),
-          );
-        },
-      ),
+    return Column(
+      children: [
+        SizedBox(
+          height: 200.h,
+          width: MediaQuery.of(context).size.width,
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: 15,
+            scrollDirection: Axis.horizontal,
+            onPageChanged: (value) {
+              setState(() {
+                currentIndex = value;
+              });
+            },
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(left: 10.h, right: 10.h),
+                child: AvailableRideContainer(
+                  vehicleName: 'Mercedes-Benz',
+                  vehiclePlate: 'DL-2473854',
+                  type: '3 Person Can Ride',
+                  activeIndex: index,
+                  currentIndex: currentIndex,
+                  price:
+                      CurrencyUtils.formatCurrency.format(double.parse('340')),
+                ),
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 20.h),
+        SizedBox(
+          width: 300.w,
+          child: PrimaryButton(
+            onPressed: () {
+              context.push('/rideDetail');
+              log.d(currentIndex);
+            },
+            label: AppStrings.bookRide,
+          ),
+        ),
+      ],
     );
   }
 }

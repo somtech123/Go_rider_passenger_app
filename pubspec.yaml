@@ -55,6 +55,9 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
+  fluttertoast: ^8.2.4
+  flutter_easyloading: ^3.0.5
+  email_validator: 
   
 dev_dependencies:
   flutter_test:

@@ -86,16 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         drawer: const HomeScreenDrawer(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Padding(
-          padding: EdgeInsets.all(20.h),
-          child: PrimaryButton(
-            onPressed: () {
-              context.push('/rideDetail');
-            },
-            label: AppStrings.bookRide,
-          ),
-        ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: Padding(
+        //   padding: EdgeInsets.all(20.h),
+        //   child: PrimaryButton(
+        //     onPressed: () {
+        //       context.push('/rideDetail');
+        //     },
+        //     label: AppStrings.bookRide,
+        //   ),
+        // ),
         body: BlocListener<HomePageBloc, HomePageState>(
           listener: (context, state) {},
           bloc: homeloc,
@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Positioned(
-                            bottom: 100.0.h,
+                            bottom: 30.0.h,
                             child: const AvailableRideWideget(),
                           )
                         ],

@@ -51,6 +51,7 @@ class AppTextField extends StatelessWidget {
   final VoidCallback? ontap;
   final VoidCallback? onEdittingComplete;
   final void Function(String)? onFieldSubmitted;
+  final TextInputAction? textInputAction;
 
   const AppTextField({
     super.key,
@@ -60,6 +61,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.keyboardType,
     this.errorMessage,
+    this.textInputAction,
     this.controller,
     this.focusNode,
     this.borderRadius = 6.0,
@@ -151,6 +153,7 @@ class AppTextField extends StatelessWidget {
             prefixIcon: prefixIcon,
           ),
       onChanged: onChanged,
+      textInputAction: textInputAction,
       onTap: ontap,
       onEditingComplete: onEdittingComplete,
       onFieldSubmitted: onFieldSubmitted ??
