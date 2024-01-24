@@ -2,6 +2,9 @@ class AppStrings {
   static const String home = 'Home';
   static const String enterEmail = 'Enter Your Email';
 
+  static String dummyProfilePicture =
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
+
   static const String fullName = 'Full name';
   static const String enterPassword = 'Create Password';
   static const String forgetPassword = 'Forget password ?';

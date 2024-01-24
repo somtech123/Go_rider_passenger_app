@@ -8,6 +8,11 @@ class RequestLocation extends HomePageBlocEvent {
   List<Object?> get props => [];
 }
 
+class GetUserDetails extends HomePageBlocEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 // ignore: must_be_immutable
 class UpdateRideIndex extends HomePageBlocEvent {
   final BuildContext context;

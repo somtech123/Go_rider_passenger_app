@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_bloc.dart';
+import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_event.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_state.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/view/widget/social_button_widget.dart';
 import 'package:go_rider/ui/shared/shared_widget/app_text_field.dart';
@@ -144,6 +145,11 @@ class _LoginBodyViewState extends State<LoginBodyView> {
                     if (formKey.currentState!.validate()) {
                       log.w('Loggin user in ');
                       SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+                      loginBloc.add(Login(
+                          context: context,
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim()));
                     }
                   },
                   label: AppStrings.siginIN,

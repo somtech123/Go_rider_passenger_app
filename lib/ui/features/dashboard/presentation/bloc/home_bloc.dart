@@ -2,8 +2,13 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/app/services/firebase_repository.dart';
+import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,15 +19,27 @@ var log = getLogger('Home_bloc');
 class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   final Location _locationctr = Location();
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final FirebaseRepository _firebaseRepository = FirebaseRepository();
+
   HomePageBloc()
       : super(HomePageState(
-            mapController: Completer<GoogleMapController>(), activeIndex: 0)) {
+            mapController: Completer<GoogleMapController>(),
+            activeIndex: 0,
+            loadingState: LoadingState.initial)) {
     on<RequestLocation>((event, emit) async {
       await getLocationUpdate();
     });
 
     on<UpdateRideIndex>((event, emit) {
       updateRideIndex(event.activeIndex);
+    });
+
+    on<GetUserDetails>((event, emit) async {
+      await getUserDetail();
     });
   }
 
@@ -34,44 +51,78 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await state.mapController.future;
-    CameraPosition _position = CameraPosition(target: pos, zoom: 14);
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_position));
+    CameraPosition position = CameraPosition(target: pos, zoom: 14);
+    await controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
 
   getLocationUpdate() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    emit(state.copyWith(
+        loadingState: LoadingState.loading, userModel: UserModel()));
 
-    _serviceEnabled = await _locationctr.serviceEnabled();
-    if (_serviceEnabled) {
-      _serviceEnabled = await _locationctr.requestService();
+    /// get user current location
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await _locationctr.serviceEnabled();
+    if (serviceEnabled) {
+      serviceEnabled = await _locationctr.requestService();
     } else {
       return;
     }
-    _permissionGranted = await _locationctr.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationctr.requestPermission();
+    permissionGranted = await _locationctr.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _locationctr.requestPermission();
 
-      if (_permissionGranted != PermissionStatus.granted) {
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
 
-    _locationctr.onLocationChanged.listen((LocationData currentLocation) {
+    _locationctr.onLocationChanged.listen((LocationData currentLocation) async {
       if (currentLocation.latitude != null &&
           currentLocation.longitude != null) {
         emit(state.copyWith(
-          currentLocation:
-              LatLng(currentLocation.latitude!, currentLocation.longitude!),
-        ));
+            currentLocation:
+                LatLng(currentLocation.latitude!, currentLocation.longitude!)));
+
+        await _firebaseRepository.addUserLocation(userType: 'user', payload: {
+          'latitude': currentLocation.latitude,
+          'longitude': currentLocation.longitude
+        });
+
         _cameraToPosition(
             LatLng(currentLocation.latitude!, currentLocation.longitude!));
+
         log.w('${currentLocation.latitude}  ${currentLocation.longitude}');
+      } else {
+        emit(state.copyWith(
+          currentLocation: null,
+        ));
       }
     });
   }
 
   updateRideIndex(int index) {
     emit(state.copyWith(activeIndex: index));
+  }
+
+  getUserDetail() async {
+    try {
+      User currentUser = _auth.currentUser!;
+      DocumentSnapshot<Map<String, dynamic>> snap =
+          await _firestore.collection("users").doc(currentUser.uid).get();
+
+      UserModel userModel = UserModel.fromJson(snap.data()!);
+
+      log.w(userModel);
+
+      emit(state.copyWith(
+          loadingState: LoadingState.loaded, userModel: userModel));
+    } catch (e) {
+      log.d(e);
+
+      emit(state.copyWith(
+          loadingState: LoadingState.error, userModel: UserModel()));
+    }
   }
 }

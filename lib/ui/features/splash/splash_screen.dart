@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,15 +14,23 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  moveToNext() async {
-    log.w('splash screen active');
-    context.replace('/login');
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  checkIfUserIsLoggedIn() async {
+    User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      log.w('going to home screen');
+      context.replace('/homePage');
+    } else {
+      log.w('going to login screen');
+      context.replace('/login');
+    }
   }
 
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 2000), () {
-      moveToNext();
+      checkIfUserIsLoggedIn();
     });
     super.initState();
   }
