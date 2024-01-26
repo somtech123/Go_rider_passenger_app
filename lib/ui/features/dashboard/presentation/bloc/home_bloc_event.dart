@@ -21,3 +21,13 @@ class SelectPickUpLocation extends HomePageBlocEvent {
   @override
   List<Object?> get props => [context];
 }
+
+class MoveCameraPosition extends HomePageBlocEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class ResetCameraPosition extends HomePageBlocEvent {
+  @override
+  List<Object?> get props => [];
+}

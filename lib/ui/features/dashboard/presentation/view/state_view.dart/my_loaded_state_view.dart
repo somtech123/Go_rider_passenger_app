@@ -4,16 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/view/widget/available_ride_widget.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-// ignore: must_be_immutable
 class MyHomeScreenLoadedStateView extends StatelessWidget {
-  MyHomeScreenLoadedStateView({
-    super.key,
-  });
+  const MyHomeScreenLoadedStateView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
       builder: (context, state) {
         if (state.currentLocation == null) {
           return const Center(
-            child: Text('Getting device location'),
+            child: Text('Getting device location....'),
           );
         } else {
           return SafeArea(
@@ -40,6 +39,7 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                     myLocationButtonEnabled: true,
                     zoomControlsEnabled: true,
                     zoomGesturesEnabled: true,
+                    trafficEnabled: true,
                     initialCameraPosition: CameraPosition(
                         zoom: 14,
                         target: LatLng(state.currentLocation!.latitude,
@@ -49,7 +49,9 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                     },
                     markers: state.markers,
                     polylines: Set<Polyline>.of(state.polyline.values),
-                    onCameraMove: (position) {},
+                    onCameraMove: (position) {
+                      homeloc.add(MoveCameraPosition());
+                    },
                   ),
                 ),
                 Positioned(
@@ -83,17 +85,24 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                                             .textTheme
                                             .bodySmall!
                                             .copyWith(
-                                                fontSize: 16,
+                                                fontSize: 13,
                                                 fontWeight: FontWeight.w400,
-                                                color: AppColor.darkColor),
+                                                color: AppColor.greyColor),
                                       )
                                     ],
                                   ),
                                   placeholder: 'Your Location',
+                                  expands: true,
+                                  minLines: null,
+                                  maxLines: null,
                                   controller: state.pickUpAddress,
-                                  onEditingComplete: () {
-                                    log.w('comple');
-                                  },
+                                  onEditingComplete: () {},
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                          fontSize: 14,
+                                          color: AppColor.darkColor),
                                 ),
                               ),
                               AbsorbPointer(
@@ -102,9 +111,16 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                                   placeholder: 'Your Destination',
                                   textAlign: TextAlign.center,
                                   controller: state.destinationAddress,
-                                  onEditingComplete: () {
-                                    log.w('comple');
-                                  },
+                                  expands: true,
+                                  minLines: null,
+                                  maxLines: null,
+                                  onEditingComplete: () {},
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall!
+                                      .copyWith(
+                                          fontSize: 14,
+                                          color: AppColor.darkColor),
                                   prefix: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -116,9 +132,9 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                                             .textTheme
                                             .bodySmall!
                                             .copyWith(
-                                                fontSize: 16,
+                                                fontSize: 13,
                                                 fontWeight: FontWeight.w400,
-                                                color: AppColor.darkColor),
+                                                color: AppColor.greyColor),
                                       )
                                     ],
                                   ),
@@ -132,10 +148,28 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Positioned(
-                //   bottom: 30.0.h,
-                //   child: const AvailableRideWideget(),
-                // )
+                Visibility(
+                  visible: state.onCameraMove == true,
+                  child: Positioned(
+                    bottom: height / 2,
+                    right: 20.h,
+                    child: CircleAvatar(
+                        radius: 25.r,
+                        backgroundColor: AppColor.whiteColor,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                              onPressed: () {
+                                homeloc.add(ResetCameraPosition());
+                              },
+                              icon: const Icon(Icons.near_me)),
+                        )),
+                  ),
+                ),
+                Positioned(
+                  bottom: 30.0.h,
+                  child: const AvailableRideWideget(),
+                )
               ],
             ),
           );

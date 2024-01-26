@@ -38,14 +38,14 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   HomePageBloc()
       : super(HomePageState(
-          mapController: Completer<GoogleMapController>(),
-          loadingState: LoadingState.initial,
-          markers: {},
-          plineCoordinate: [],
-          polyline: {},
-          pickUpAddress: TextEditingController(),
-          destinationAddress: TextEditingController(),
-        )) {
+            mapController: Completer<GoogleMapController>(),
+            loadingState: LoadingState.initial,
+            markers: {},
+            plineCoordinate: [],
+            polyline: {},
+            pickUpAddress: TextEditingController(),
+            destinationAddress: TextEditingController(),
+            onCameraMove: false)) {
     on<RequestLocation>((event, emit) async {
       await getLocationUpdate();
     });
@@ -57,6 +57,26 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     on<SelectPickUpLocation>((event, emit) async {
       selectPickUpLocation(event.context);
     });
+
+    on<MoveCameraPosition>((event, emit) {
+      onCameraMove();
+    });
+
+    on<ResetCameraPosition>((event, emit) {
+      resetCameraPosition();
+    });
+  }
+
+  onCameraMove() {
+    emit(state.copyWith(onCameraMove: true));
+  }
+
+  resetCameraPosition() {
+    
+    emit(state.copyWith(onCameraMove: false));
+
+    _cameraToPosition(LatLng(
+        state.currentLocation!.latitude, state.currentLocation!.longitude));
   }
 
   @override
@@ -120,8 +140,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           'longitude': currentLocation.longitude
         });
 
-        _cameraToPosition(
-            LatLng(currentLocation.latitude!, currentLocation.longitude!));
+        // _cameraToPosition(
+        //     LatLng(currentLocation.latitude!, currentLocation.longitude!));
 
         _updateMarker(
             LatLng(currentLocation.latitude!, currentLocation.longitude!));

@@ -5,8 +5,10 @@ import 'package:go_rider/ui/features/dashboard/presentation/view/widget/drawer_h
 import 'package:go_rider/utils/app_constant/app_string.dart';
 import 'package:go_router/go_router.dart';
 
+// ignore: must_be_immutable
 class HomeScreenDrawer extends StatelessWidget {
-  const HomeScreenDrawer({super.key});
+  HomeScreenDrawer({super.key, required this.scaffoldKey});
+  GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class HomeScreenDrawer extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const HomeDrawerHeader(),
+            HomeDrawerHeader(scaffoldKey: scaffoldKey),
             _drawerList(context),
           ],
         ),

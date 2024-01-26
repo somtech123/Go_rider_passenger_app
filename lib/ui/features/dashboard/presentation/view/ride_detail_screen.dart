@@ -78,7 +78,7 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                                   state.mapController.complete(controller),
                               markers: {
                                 Marker(
-                                    markerId: MarkerId('currentLocation'),
+                                    markerId: const MarkerId('currentLocation'),
                                     position: state.currentLocation!,
                                     icon: BitmapDescriptor.defaultMarker)
                               },

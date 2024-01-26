@@ -46,7 +46,7 @@ class ChatScreen extends StatelessWidget {
           children: [
             AppTextField(
               hintText: 'Search',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               borderRadius: 25.r,
             ),
             Expanded(

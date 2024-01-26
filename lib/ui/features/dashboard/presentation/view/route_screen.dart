@@ -62,30 +62,38 @@ class RouteScreen extends StatelessWidget {
                   onFieldSubmitted: (p0) {},
                 ),
                 SizedBox(height: 20.h),
-                AppTextField(
-                  hintText: 'Your Destination',
-                  borderRadius: 25,
-                  prefixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(width: 5.w),
-                      SvgPicture.asset('assets/svgs/to.svg'),
-                      SizedBox(width: 5.w),
-                      Text(
-                        'To: ',
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.greyColor),
-                      )
-                    ],
-                  ),
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (p0) {},
-                  controller: state.destinationAddress,
-                  ontap: () {
+                InkWell(
+                  onTap: () {
                     homeloc.add(SelectPickUpLocation(context: context));
                   },
+                  child: AbsorbPointer(
+                    absorbing: true,
+                    child: AppTextField(
+                      hintText: 'Your Destination',
+                      borderRadius: 25,
+                      prefixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(width: 5.w),
+                          SvgPicture.asset('assets/svgs/to.svg'),
+                          SizedBox(width: 5.w),
+                          Text(
+                            'To: ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColor.greyColor),
+                          )
+                        ],
+                      ),
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (p0) {},
+                      controller: state.destinationAddress,
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -27,6 +27,8 @@ class HomePageState {
 
   TextEditingController destinationAddress;
 
+  bool onCameraMove;
+
   HomePageState({
     this.loadingState = LoadingState.initial,
     this.currentLocation,
@@ -38,6 +40,7 @@ class HomePageState {
     required this.destinationAddress,
     required this.pickUpAddress,
     required this.polyline,
+    required this.onCameraMove,
   });
 
   HomePageState copyWith(
@@ -50,19 +53,20 @@ class HomePageState {
           TextEditingController? pickUpAddress,
           TextEditingController? destinationAddress,
           LatLng? destinationLocation,
-          Map<PolylineId, Polyline>? polyline}) =>
+          Map<PolylineId, Polyline>? polyline,
+          bool? onCameraMove}) =>
       HomePageState(
-        loadingState: loadingState ?? this.loadingState,
-        destinationLocation: destinationLocation ?? this.destinationLocation,
-        currentLocation: currentLocation ?? this.currentLocation,
-        mapController: mapController ?? this.mapController,
-        userModel: userModel ?? this.userModel,
-        markers: markers ?? this.markers,
-        plineCoordinate: plineCoordinate ?? this.plineCoordinate,
-        pickUpAddress: pickUpAddress ?? this.pickUpAddress,
-        destinationAddress: destinationAddress ?? this.destinationAddress,
-        polyline: polyline ?? this.polyline,
-      );
+          loadingState: loadingState ?? this.loadingState,
+          destinationLocation: destinationLocation ?? this.destinationLocation,
+          currentLocation: currentLocation ?? this.currentLocation,
+          mapController: mapController ?? this.mapController,
+          userModel: userModel ?? this.userModel,
+          markers: markers ?? this.markers,
+          plineCoordinate: plineCoordinate ?? this.plineCoordinate,
+          pickUpAddress: pickUpAddress ?? this.pickUpAddress,
+          destinationAddress: destinationAddress ?? this.destinationAddress,
+          polyline: polyline ?? this.polyline,
+          onCameraMove: onCameraMove ?? this.onCameraMove);
 
   @override
   List<Object?> get props => [
@@ -76,5 +80,6 @@ class HomePageState {
         destinationAddress,
         pickUpAddress,
         polyline,
+        onCameraMove,
       ];
 }

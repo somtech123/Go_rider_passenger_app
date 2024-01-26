@@ -17,7 +17,7 @@ class _AppMainWrapperState extends State<AppMainWrapper>
   @override
   void initState() {
     super.initState();
-    // TODO: Put dynamic link functions here
+
     WidgetsBinding.instance.addObserver(this);
   }
 
