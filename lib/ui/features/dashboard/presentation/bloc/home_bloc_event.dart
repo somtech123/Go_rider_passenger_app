@@ -23,3 +23,12 @@ class UpdateRideIndex extends HomePageBlocEvent {
   @override
   List<Object?> get props => [context, activeIndex];
 }
+
+class SelectPickUpLocation extends HomePageBlocEvent {
+  final BuildContext context;
+
+  SelectPickUpLocation({required this.context});
+
+  @override
+  List<Object?> get props => [context];
+}

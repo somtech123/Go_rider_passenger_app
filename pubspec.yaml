@@ -49,7 +49,10 @@ dependencies:
   flutter_svg: ^2.0.7
   location: ^5.0.0
   geolocator: ^10.1.0
-  geocoder2: ^1.4.0
+  geocoding: ^2.1.1
+  
+  
+  
   
 
 
@@ -63,6 +66,11 @@ dependencies:
   flutter_easyloading: ^3.0.5
   email_validator: 
   flutter_dotenv: ^5.1.0
+
+dependency_overrides:
+  flutter_polyline_points: 
+  flutter_google_places_hoc081098: 
+
   
   
 dev_dependencies:

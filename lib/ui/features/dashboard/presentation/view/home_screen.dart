@@ -25,10 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<HomePageBloc>(context).add(GetUserDetails());
 
     BlocProvider.of<HomePageBloc>(context).add(RequestLocation());
-
-    // BlocProvider.of<HomePageBloc>(context).add(GetUserDetails());
   }
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -45,10 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: AppColor.primaryColor,
           title: Text(
             AppStrings.home,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColor.whiteColor),
           ),
           actions: [
             Padding(

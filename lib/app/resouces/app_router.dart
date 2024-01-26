@@ -6,6 +6,7 @@ import 'package:go_rider/ui/features/chat/presentation/view/chat_screen.dart';
 import 'package:go_rider/ui/features/chat/presentation/view/view_layout.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/home_screen.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/ride_detail_screen.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/view/route_screen.dart';
 import 'package:go_rider/ui/features/history/presentation/view/history.dart';
 import 'package:go_rider/ui/features/splash/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,11 @@ class AppRouter {
         path: '/signUp',
         pageBuilder: (context, state) => CustomSlideTransition(
             key: state.pageKey, child: const SignUpScreen()),
+      ),
+      GoRoute(
+        path: '/route',
+        pageBuilder: (context, state) => CustomFadeTransition(
+            child: const RouteScreen(), key: state.pageKey),
       ),
       GoRoute(
           path: '/rideDetail',
