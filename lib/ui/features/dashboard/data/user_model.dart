@@ -1,5 +1,3 @@
-import 'package:go_rider/utils/app_constant/app_string.dart';
-
 class UserModel {
   String? email;
   String? username;

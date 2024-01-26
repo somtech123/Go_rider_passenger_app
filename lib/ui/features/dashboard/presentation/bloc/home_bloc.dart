@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
 import 'package:go_rider/app/services/firebase_repository.dart';
@@ -29,7 +30,11 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
       : super(HomePageState(
             mapController: Completer<GoogleMapController>(),
             activeIndex: 0,
-            loadingState: LoadingState.initial)) {
+            loadingState: LoadingState.loaded,
+            markers: {},
+            circles: {},
+            plineCoordinate: [],
+            polyLine: {})) {
     on<RequestLocation>((event, emit) async {
       await getLocationUpdate();
     });
@@ -39,7 +44,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     });
 
     on<GetUserDetails>((event, emit) async {
-      await getUserDetail();
+      //  await getUserDetail();
     });
   }
 
@@ -52,14 +57,61 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await state.mapController.future;
     CameraPosition position = CameraPosition(target: pos, zoom: 14);
+
     await controller.animateCamera(CameraUpdate.newCameraPosition(position));
   }
 
-  getLocationUpdate() async {
-    emit(state.copyWith(
-        loadingState: LoadingState.loading, userModel: UserModel()));
+  Future<bool> _handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-    /// get user current location
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return false;
+    } else {
+      permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+
+        if (permission == LocationPermission.denied) {
+          return false;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return false;
+      }
+
+      return true;
+    }
+  }
+
+  updateRideIndex(int index) {
+    emit(state.copyWith(activeIndex: index));
+  }
+
+  getUserDetail() async {
+    try {
+      User currentUser = _auth.currentUser!;
+      DocumentSnapshot<Map<String, dynamic>> snap =
+          await _firestore.collection("users").doc(currentUser.uid).get();
+
+      UserModel userModel = UserModel.fromJson(snap.data()!);
+
+      log.w(userModel);
+
+      emit(state.copyWith(
+          loadingState: LoadingState.loaded, userModel: userModel));
+    } catch (e) {
+      log.d(e);
+
+      emit(state.copyWith(
+          loadingState: LoadingState.error, userModel: UserModel()));
+    }
+  }
+
+  getLocationUpdate() async {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
 
@@ -93,6 +145,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         _cameraToPosition(
             LatLng(currentLocation.latitude!, currentLocation.longitude!));
 
+        _updateMarker(
+            LatLng(currentLocation.latitude!, currentLocation.longitude!));
+
         log.w('${currentLocation.latitude}  ${currentLocation.longitude}');
       } else {
         emit(state.copyWith(
@@ -102,27 +157,13 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     });
   }
 
-  updateRideIndex(int index) {
-    emit(state.copyWith(activeIndex: index));
-  }
+  _updateMarker(LatLng position) {
+    Marker currentLocationMarker = Marker(
+        markerId: const MarkerId('current_location'),
+        position: LatLng(position.latitude, position.longitude));
+    Set<Marker> markers = state.markers;
+    markers.add(currentLocationMarker);
 
-  getUserDetail() async {
-    try {
-      User currentUser = _auth.currentUser!;
-      DocumentSnapshot<Map<String, dynamic>> snap =
-          await _firestore.collection("users").doc(currentUser.uid).get();
-
-      UserModel userModel = UserModel.fromJson(snap.data()!);
-
-      log.w(userModel);
-
-      emit(state.copyWith(
-          loadingState: LoadingState.loaded, userModel: userModel));
-    } catch (e) {
-      log.d(e);
-
-      emit(state.copyWith(
-          loadingState: LoadingState.error, userModel: UserModel()));
-    }
+    emit(state.copyWith(markers: markers));
   }
 }

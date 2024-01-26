@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     BlocProvider.of<HomePageBloc>(context).add(RequestLocation());
 
-    BlocProvider.of<HomePageBloc>(context).add(GetUserDetails());
+    // BlocProvider.of<HomePageBloc>(context).add(GetUserDetails());
   }
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state.loadingState == LoadingState.loading) {
                 return const MyHomeScreenLoadingView();
               } else if (state.loadingState == LoadingState.loaded) {
-                return MyHomeScreenLoadedStateView(state: state);
+                return MyHomeScreenLoadedStateView();
               } else if (state.loadingState == LoadingState.error) {
                 return const MyHomeScreenErrorView();
               } else {
