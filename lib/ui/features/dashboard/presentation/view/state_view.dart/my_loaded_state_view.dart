@@ -47,7 +47,6 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                     onMapCreated: (GoogleMapController controller) {
                       state.mapController.complete(controller);
                     },
-                    circles: state.circles,
                     markers: state.markers,
                     polylines: Set<Polyline>.of(state.polyline.values),
                     onCameraMove: (position) {},
