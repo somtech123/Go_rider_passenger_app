@@ -44,12 +44,15 @@ dependencies:
   go_router: ^13.0.1
   provider: ^6.0.5
   google_maps_flutter: ^2.5.3
-  google_fonts: ^5.1.0
   
   flutter_screenutil: ^5.3.1
   flutter_svg: ^2.0.7
   location: ^5.0.0
   geolocator: ^10.1.0
+  geocoder2: ^1.4.0
+  
+
+
   flutter_rating_bar: ^4.0.1
   visibility_detector: ^0.4.0+2
   dash_chat_2: 
@@ -59,6 +62,8 @@ dependencies:
   fluttertoast: ^8.2.4
   flutter_easyloading: ^3.0.5
   email_validator: 
+  flutter_dotenv: ^5.1.0
+  
   
 dev_dependencies:
   flutter_test:
@@ -89,6 +94,7 @@ flutter:
     - assets/images/
     - assets/svgs/ 
     - assets/images/gorider.jpg
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

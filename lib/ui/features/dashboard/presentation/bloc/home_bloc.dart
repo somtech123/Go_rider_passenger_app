@@ -141,6 +141,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           'latitude': currentLocation.latitude,
           'longitude': currentLocation.longitude
         });
+        // var addresses = await Geocoder.local.findAddressesFromCoordinates(
+        //   coordinates);
 
         _cameraToPosition(
             LatLng(currentLocation.latitude!, currentLocation.longitude!));
