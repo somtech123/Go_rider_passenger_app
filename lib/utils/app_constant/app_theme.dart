@@ -14,17 +14,11 @@ final appThemeData = ThemeData(
       statusBarColor: Colors.grey[50],
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
-      //systemNavigationBarColor: Colors.grey[50],
       systemNavigationBarContrastEnforced: true,
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   ),
-  // bottomSheetTheme: const BottomSheetThemeData(
-  //     backgroundColor: Colors.transparent,
-  //     shadowColor: Colors.transparent,
-  //     modalBackgroundColor: Colors.transparent,
-  //     surfaceTintColor: Colors.transparent,
-  //     clipBehavior: Clip.hardEdge),
+
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: {},
   ),

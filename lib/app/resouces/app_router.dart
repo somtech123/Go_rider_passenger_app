@@ -4,6 +4,7 @@ import 'package:go_rider/ui/features/authentication/login/presentation/view/logi
 import 'package:go_rider/ui/features/authentication/signup/prsentation/view/sign_up_screen.dart';
 import 'package:go_rider/ui/features/chat/presentation/view/chat_screen.dart';
 import 'package:go_rider/ui/features/chat/presentation/view/view_layout.dart';
+import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/home_screen.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/ride_detail_screen.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/route_screen.dart';
@@ -36,8 +37,12 @@ class AppRouter {
       ),
       GoRoute(
           path: '/rideDetail',
-          pageBuilder: (context, state) => CustomSlideTransition(
-              child: const RideDetailScreen(), key: state.pageKey)),
+          pageBuilder: (context, state) {
+            RiderModel riderModel = state.extra as RiderModel;
+            return CustomSlideTransition(
+                child: RideDetailScreen(riderModel: riderModel),
+                key: state.pageKey);
+          }),
       GoRoute(
           path: '/historyPage',
           builder: (context, state) => const HistoryScreen()),

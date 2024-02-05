@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/app_constant/app_string.dart';
@@ -10,8 +11,10 @@ import 'package:go_router/go_router.dart';
 
 var log = getLogger('availableride');
 
+// ignore: must_be_immutable
 class AvailableRideWideget extends StatefulWidget {
-  const AvailableRideWideget({super.key});
+  AvailableRideWideget({super.key, required this.rider});
+  List<RiderModel> rider;
 
   @override
   State<AvailableRideWideget> createState() => _AvailableRideWidegetState();
@@ -37,7 +40,7 @@ class _AvailableRideWidegetState extends State<AvailableRideWideget> {
           width: MediaQuery.of(context).size.width,
           child: PageView.builder(
             controller: pageController,
-            itemCount: 15,
+            itemCount: widget.rider.length,
             scrollDirection: Axis.horizontal,
             onPageChanged: (value) {
               setState(() {
@@ -48,9 +51,9 @@ class _AvailableRideWidegetState extends State<AvailableRideWideget> {
               return Padding(
                 padding: EdgeInsets.only(left: 10.h, right: 10.h),
                 child: AvailableRideContainer(
-                  vehicleName: 'Mercedes-Benz',
-                  vehiclePlate: 'DL-2473854',
-                  type: '3 Person Can Ride',
+                  vehicleName: widget.rider[index].rideModel!,
+                  vehiclePlate: widget.rider[index].ridePlate!,
+                  type: '${widget.rider[index].noOfSeat} Person Can Ride',
                   activeIndex: index,
                   currentIndex: currentIndex,
                   price:
@@ -65,7 +68,7 @@ class _AvailableRideWidegetState extends State<AvailableRideWideget> {
           width: 300.w,
           child: PrimaryButton(
             onPressed: () {
-              context.push('/rideDetail');
+              context.push('/rideDetail', extra: widget.rider[currentIndex]);
               log.d(currentIndex);
             },
             label: AppStrings.bookRide,

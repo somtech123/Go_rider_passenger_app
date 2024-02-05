@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
+import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -28,20 +29,21 @@ class HomePageState {
   TextEditingController destinationAddress;
 
   bool onCameraMove;
+  List<RiderModel>? rider;
 
-  HomePageState({
-    this.loadingState = LoadingState.initial,
-    this.currentLocation,
-    this.destinationLocation,
-    this.userModel,
-    required this.mapController,
-    required this.markers,
-    required this.plineCoordinate,
-    required this.destinationAddress,
-    required this.pickUpAddress,
-    required this.polyline,
-    required this.onCameraMove,
-  });
+  HomePageState(
+      {this.loadingState = LoadingState.initial,
+      this.currentLocation,
+      this.destinationLocation,
+      this.userModel,
+      required this.mapController,
+      required this.markers,
+      required this.plineCoordinate,
+      required this.destinationAddress,
+      required this.pickUpAddress,
+      required this.polyline,
+      required this.onCameraMove,
+      this.rider});
 
   HomePageState copyWith(
           {LoadingState? loadingState,
@@ -54,6 +56,7 @@ class HomePageState {
           TextEditingController? destinationAddress,
           LatLng? destinationLocation,
           Map<PolylineId, Polyline>? polyline,
+          List<RiderModel>? rider,
           bool? onCameraMove}) =>
       HomePageState(
           loadingState: loadingState ?? this.loadingState,
@@ -66,6 +69,7 @@ class HomePageState {
           pickUpAddress: pickUpAddress ?? this.pickUpAddress,
           destinationAddress: destinationAddress ?? this.destinationAddress,
           polyline: polyline ?? this.polyline,
+          rider: rider ?? this.rider,
           onCameraMove: onCameraMove ?? this.onCameraMove);
 
   @override
@@ -81,5 +85,6 @@ class HomePageState {
         pickUpAddress,
         polyline,
         onCameraMove,
+        rider
       ];
 }

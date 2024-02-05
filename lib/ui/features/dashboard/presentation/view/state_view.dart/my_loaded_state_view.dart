@@ -166,9 +166,12 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                         )),
                   ),
                 ),
-                Positioned(
-                  bottom: 30.0.h,
-                  child: const AvailableRideWideget(),
+                Visibility(
+                  visible: state.destinationAddress.text.isNotEmpty,
+                  child: Positioned(
+                    bottom: 30.0.h,
+                    child: AvailableRideWideget(rider: state.rider!),
+                  ),
                 )
               ],
             ),

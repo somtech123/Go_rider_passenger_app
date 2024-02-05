@@ -10,6 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:location/location.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
@@ -43,6 +44,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
             markers: {},
             plineCoordinate: [],
             polyline: {},
+            rider: [],
             pickUpAddress: TextEditingController(),
             destinationAddress: TextEditingController(),
             onCameraMove: false)) {
@@ -72,7 +74,6 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   resetCameraPosition() {
-    
     emit(state.copyWith(onCameraMove: false));
 
     _cameraToPosition(LatLng(
@@ -139,9 +140,6 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           'latitude': currentLocation.latitude,
           'longitude': currentLocation.longitude
         });
-
-        // _cameraToPosition(
-        //     LatLng(currentLocation.latitude!, currentLocation.longitude!));
 
         _updateMarker(
             LatLng(currentLocation.latitude!, currentLocation.longitude!));
@@ -234,12 +232,20 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     emit(state.copyWith(polyline: pol));
   }
 
+  getRider() async {
+    List<RiderModel> rider = await _firebaseRepository.getRider();
+
+    emit(state.copyWith(rider: rider));
+  }
+
   Future<void> selectPickUpLocation(BuildContext context) async {
-    await autoComplete(context)
-        .then((_) => getPolyPointCordinate(LatLng(
-            state.destinationLocation!.latitude,
-            state.destinationLocation!.longitude)))
-        .then((value) => generatePolyLine(value));
+    await autoComplete(context).then((value) => getRider());
+    // .then((_) =>
+
+    //  getPolyPointCordinate(LatLng(
+    //     state.destinationLocation!.latitude,
+    //     state.destinationLocation!.longitude)))
+    // .then((value) => generatePolyLine(value));
   }
 
   Future<void> autoComplete(BuildContext context) async {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
@@ -10,8 +11,11 @@ import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// ignore: must_be_immutable
 class RideDetailScreen extends StatefulWidget {
-  const RideDetailScreen({super.key});
+  RideDetailScreen({super.key, required this.riderModel});
+
+  RiderModel riderModel;
 
   @override
   State<RideDetailScreen> createState() => _RideDetailScreenState();
@@ -86,7 +90,8 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                           ),
                           Positioned(
                             bottom: 0,
-                            child: _detailContainer(context),
+                            child: _detailContainer(context,
+                                riderModel: widget.riderModel),
                           )
                         ],
                       ),
@@ -97,7 +102,8 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
   }
 }
 
-Widget _detailContainer(BuildContext context) {
+Widget _detailContainer(BuildContext context,
+    {required RiderModel riderModel}) {
   return Container(
     height: 300.h,
     padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.h),
@@ -136,7 +142,7 @@ Widget _detailContainer(BuildContext context) {
               ),
             ),
             title: Text(
-              'Shabbir Aly Khan',
+              riderModel.username!,
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
@@ -176,7 +182,7 @@ Widget _detailContainer(BuildContext context) {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Mercedes-Benz',
+              Text(riderModel.rideModel!,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
@@ -194,7 +200,7 @@ Widget _detailContainer(BuildContext context) {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('DL-2473854',
+              Text(riderModel.phoneNumber!,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
