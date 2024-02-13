@@ -66,6 +66,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   email_validator: 
   flutter_dotenv: ^5.1.0
+  uuid: 
 
 dependency_overrides:
   flutter_polyline_points: 

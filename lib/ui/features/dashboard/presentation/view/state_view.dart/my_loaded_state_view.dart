@@ -48,7 +48,7 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                       state.mapController.complete(controller);
                     },
                     markers: state.markers,
-                    polylines: Set<Polyline>.of(state.polyline.values),
+                    //  polylines: Set<Polyline>.of(state.polyline.values),
                     onCameraMove: (position) {
                       homeloc.add(MoveCameraPosition());
                     },
@@ -167,7 +167,8 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: state.destinationAddress.text.isNotEmpty,
+                  visible: state.rider!.isNotEmpty,
+                  // destinationAddress.text.isNotEmpty,
                   child: Positioned(
                     bottom: 30.0.h,
                     child: AvailableRideWideget(rider: state.rider!),

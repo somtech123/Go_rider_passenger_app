@@ -1,5 +1,6 @@
 class RiderModel {
   String? email;
+  String? id;
   String? username;
   String? profileImage;
   DateTime? dateCreated;
@@ -13,6 +14,7 @@ class RiderModel {
       {this.email,
       this.profileImage,
       this.username,
+      this.id,
       this.dateCreated,
       this.phoneNumber,
       this.rideColor,
@@ -22,6 +24,7 @@ class RiderModel {
 
   factory RiderModel.fromJson(Map<String, dynamic> json) => RiderModel(
       email: json['email'],
+      id: json['id'],
       username: json['userName'],
       dateCreated: DateTime.parse(json['dateCreated']),
       phoneNumber: json['phoneNumber'],

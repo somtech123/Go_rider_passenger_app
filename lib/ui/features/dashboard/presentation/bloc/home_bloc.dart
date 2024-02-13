@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, use_build_context_synchronously, unnecessary_null_comparison, depend_on_referenced_packages
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,8 +11,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
+import 'package:go_rider/utils/utils/utils.dart';
 import 'package:location/location.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
@@ -22,6 +25,8 @@ import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // ignore: library_prefixes
 import 'package:google_maps_webservice/places.dart' as mapServices;
+import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 var log = getLogger('Home_bloc');
 
@@ -39,15 +44,17 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   HomePageBloc()
       : super(HomePageState(
-            mapController: Completer<GoogleMapController>(),
-            loadingState: LoadingState.initial,
-            markers: {},
-            plineCoordinate: [],
-            polyline: {},
-            rider: [],
-            pickUpAddress: TextEditingController(),
-            destinationAddress: TextEditingController(),
-            onCameraMove: false)) {
+          mapController: Completer<GoogleMapController>(),
+          loadingState: LoadingState.initial,
+          markers: {},
+          plineCoordinate: [],
+          polyline: {},
+          rider: [],
+          pickUpAddress: TextEditingController(),
+          destinationAddress: TextEditingController(),
+          onCameraMove: false,
+          isBooked: false,
+        )) {
     on<RequestLocation>((event, emit) async {
       await getLocationUpdate();
     });
@@ -66,6 +73,18 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
     on<ResetCameraPosition>((event, emit) {
       resetCameraPosition();
+    });
+
+    on<GetRiderLocation>((event, emit) async {
+      await getRiderLocation(event.riderId);
+    });
+
+    on<BookRider>((event, emit) async {
+      await bookRide(rider: event.rider);
+    });
+
+    on<CancelRide>((event, emit) async {
+      cancelRide();
     });
   }
 
@@ -238,17 +257,47 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     emit(state.copyWith(rider: rider));
   }
 
+  getRiderLocation(String id) async {
+    emit(state.copyWith(riderLoadingState: LoadingState.loading));
+
+    LocationModel riderLocation = await _firebaseRepository.getLocation(id);
+
+    log.w(riderLocation);
+
+    if (riderLocation.lattitude != null) {
+      log.w(riderLocation.lattitude);
+      log.w(riderLocation.longitude);
+
+      // await getETA(state.currentLocation!,
+      //     LatLng(riderLocation.lattitude!, riderLocation.longitude!));
+
+      getPolyPointCordinate(LatLng(state.destinationLocation!.latitude,
+              state.destinationLocation!.longitude))
+          .then((value) => generatePolyLine(value));
+
+      emit(state.copyWith(
+          riderLocation: riderLocation,
+          riderLoadingState: LoadingState.loaded));
+    } else {
+      emit(state.copyWith(
+          riderLocation: null, riderLoadingState: LoadingState.error));
+    }
+  }
+
   Future<void> selectPickUpLocation(BuildContext context) async {
     await autoComplete(context).then((value) => getRider());
-    // .then((_) =>
-
-    //  getPolyPointCordinate(LatLng(
+    // then((_) => getPolyPointCordinate(LatLng(
     //     state.destinationLocation!.latitude,
     //     state.destinationLocation!.longitude)))
     // .then((value) => generatePolyLine(value));
   }
 
   Future<void> autoComplete(BuildContext context) async {
+    emit(state.copyWith(
+      rider: [],
+      destinationAddress: null,
+    ));
+
     mapServices.Prediction? prediction = await PlacesAutocomplete.show(
         context: context,
         apiKey: dotenv.env['GOOGLE_MAP_API_KEY'],
@@ -290,5 +339,86 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
             destinationLocation: LatLng(latitude, longitude)));
       }
     }
+  }
+
+  Future<int> getETA(LatLng start, LatLng end) async {
+    emit(state.copyWith(
+        arrivingTimeState: LoadingState.loading, arivalDuration: 0));
+
+    final response = await http.get(Uri.parse(
+      'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=${dotenv.env['GOOGLE_MAP_API_KEY']}',
+    ));
+
+    if (response.statusCode == 200) {
+      final decodedResponse = json.decode(response.body);
+
+      log.w(decodedResponse);
+
+      final routes = decodedResponse['routes'] as List<dynamic>;
+
+      log.w(routes);
+
+      final durationInSeconds =
+          routes[0]['legs'][0]['duration']['value'] as int;
+
+      final durationInMinutes = (durationInSeconds / 60).ceil();
+      emit(state.copyWith(
+          arrivingTimeState: LoadingState.loaded,
+          arivalDuration: durationInMinutes));
+
+      log.w(durationInMinutes);
+
+      return durationInMinutes;
+    } else {
+      throw Exception('Failed to retrieve ETA');
+    }
+  }
+
+  bookRide({required RiderModel rider}) async {
+    var uuid = Uuid();
+    String uid = uuid.v4();
+
+    emit(state.copyWith(
+        isBooked: false,
+        rider: [],
+        bookRideState: LoadingState.loading,
+        uid: uid));
+
+    List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
+        state.currentLocation!.latitude, state.currentLocation!.longitude);
+
+    String address =
+        '${placemarks[0].street} ${placemarks[0].subAdministrativeArea}, ${placemarks[0].administrativeArea}';
+
+    log.w(address);
+
+    Map<String, dynamic> payload() => {
+          'rideId': Utils.generateRideRefrence(),
+          'rider_details': {
+            'riderName': rider.username,
+            'riderPlate': rider.ridePlate,
+            'riderModel': rider.rideModel,
+          },
+          'destination': state.destinationAddress.text,
+          'pickupLocation': address,
+          'amount': '300',
+          'rideStatus': 'inProgess',
+          'dateCreated': DateTime.now().toIso8601String(),
+        };
+
+    await _firebaseRepository.bookRide(payload: payload(), uid: uid);
+
+    emit(state.copyWith(isBooked: true, loadingState: LoadingState.loaded));
+  }
+
+  cancelRide() async {
+    await _firebaseRepository.cancelRide(uid: state.uid!, payload: {
+      'rideStatus': 'cancel',
+    });
+    emit(state.copyWith(
+      isBooked: false,
+      uid: '',
+      bookRideState: LoadingState.loading,
+    ));
   }
 }

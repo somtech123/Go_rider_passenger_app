@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 
 var log = getLogger('Firebase_method');
@@ -11,10 +12,38 @@ class FirebaseMethod {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static final CollectionReference<Map<String, dynamic>> _userCollection =
-      _firestore.collection('user');
+      _firestore.collection('users');
 
   static final CollectionReference<Map<String, dynamic>> _riderCollection =
       _firestore.collection('rider');
+
+  Future<void> bookRide(
+      {required Map<String, dynamic> payload, required String uid}) async {
+    try {
+      await _userCollection
+          .doc(_auth.currentUser!.uid)
+          .collection('ride')
+          .doc(uid)
+          .set(payload, SetOptions(merge: false));
+    } catch (e) {
+      log.e(e);
+    }
+  }
+
+  Future<void> cancelRide({
+    required String uid,
+    required Map<String, dynamic> payload,
+  }) async {
+    try {
+      _userCollection
+          .doc(_auth.currentUser!.uid)
+          .collection('ride')
+          .doc(uid)
+          .update(payload);
+    } catch (e) {
+      log.e(e);
+    }
+  }
 
   Future<void> addUserLocation(
       {required Map<String, dynamic> payload, required String userType}) async {
@@ -44,5 +73,22 @@ class FirebaseMethod {
       return [];
     }
     return userdata;
+  }
+
+  Future<LocationModel> getLocation(String riderId) async {
+    LocationModel locationModel = LocationModel();
+    try {
+      var snap = await _riderCollection
+          .doc(riderId)
+          .collection('location')
+          .doc('rider')
+          .get();
+
+      locationModel = LocationModel.fromJson(snap.data()!);
+    } catch (e) {
+      log.w(e);
+    }
+
+    return locationModel;
   }
 }

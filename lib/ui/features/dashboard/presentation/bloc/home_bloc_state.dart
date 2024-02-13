@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
+import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -11,6 +12,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class HomePageState {
   LoadingState? loadingState;
   LatLng? currentLocation;
+
+  LoadingState? riderLoadingState;
+
+  LoadingState? arrivingTimeState;
+
+  LoadingState? bookRideState;
+
+  int? arivalDuration;
 
   LatLng? destinationLocation;
 
@@ -29,62 +38,96 @@ class HomePageState {
   TextEditingController destinationAddress;
 
   bool onCameraMove;
+  LocationModel? riderLocation;
   List<RiderModel>? rider;
+  bool? isBooked;
+  String? uid;
 
-  HomePageState(
-      {this.loadingState = LoadingState.initial,
-      this.currentLocation,
-      this.destinationLocation,
-      this.userModel,
-      required this.mapController,
-      required this.markers,
-      required this.plineCoordinate,
-      required this.destinationAddress,
-      required this.pickUpAddress,
-      required this.polyline,
-      required this.onCameraMove,
-      this.rider});
+  HomePageState({
+    this.loadingState = LoadingState.initial,
+    this.riderLoadingState = LoadingState.initial,
+    this.bookRideState = LoadingState.initial,
+    this.currentLocation,
+    this.destinationLocation,
+    this.userModel,
+    this.riderLocation,
+    required this.mapController,
+    required this.markers,
+    required this.plineCoordinate,
+    required this.destinationAddress,
+    required this.pickUpAddress,
+    required this.polyline,
+    required this.onCameraMove,
+    this.arivalDuration,
+    this.arrivingTimeState = LoadingState.initial,
+    this.rider,
+    this.isBooked,
+    this.uid,
+  });
 
-  HomePageState copyWith(
-          {LoadingState? loadingState,
-          LatLng? currentLocation,
-          Completer<GoogleMapController>? mapController,
-          UserModel? userModel,
-          Set<Marker>? markers,
-          List<LatLng>? plineCoordinate,
-          TextEditingController? pickUpAddress,
-          TextEditingController? destinationAddress,
-          LatLng? destinationLocation,
-          Map<PolylineId, Polyline>? polyline,
-          List<RiderModel>? rider,
-          bool? onCameraMove}) =>
+  HomePageState copyWith({
+    LoadingState? loadingState,
+    LatLng? currentLocation,
+    Completer<GoogleMapController>? mapController,
+    UserModel? userModel,
+    Set<Marker>? markers,
+    List<LatLng>? plineCoordinate,
+    TextEditingController? pickUpAddress,
+    TextEditingController? destinationAddress,
+    LatLng? destinationLocation,
+    Map<PolylineId, Polyline>? polyline,
+    List<RiderModel>? rider,
+    LocationModel? riderLocation,
+    LoadingState? riderLoadingState,
+    bool? onCameraMove,
+    LoadingState? arrivingTimeState,
+    int? arivalDuration,
+    bool? isBooked,
+    LoadingState? bookRideState,
+    String? uid,
+  }) =>
       HomePageState(
-          loadingState: loadingState ?? this.loadingState,
-          destinationLocation: destinationLocation ?? this.destinationLocation,
-          currentLocation: currentLocation ?? this.currentLocation,
-          mapController: mapController ?? this.mapController,
-          userModel: userModel ?? this.userModel,
-          markers: markers ?? this.markers,
-          plineCoordinate: plineCoordinate ?? this.plineCoordinate,
-          pickUpAddress: pickUpAddress ?? this.pickUpAddress,
-          destinationAddress: destinationAddress ?? this.destinationAddress,
-          polyline: polyline ?? this.polyline,
-          rider: rider ?? this.rider,
-          onCameraMove: onCameraMove ?? this.onCameraMove);
+        loadingState: loadingState ?? this.loadingState,
+        riderLoadingState: riderLoadingState ?? this.riderLoadingState,
+        destinationLocation: destinationLocation ?? this.destinationLocation,
+        currentLocation: currentLocation ?? this.currentLocation,
+        mapController: mapController ?? this.mapController,
+        userModel: userModel ?? this.userModel,
+        markers: markers ?? this.markers,
+        plineCoordinate: plineCoordinate ?? this.plineCoordinate,
+        pickUpAddress: pickUpAddress ?? this.pickUpAddress,
+        destinationAddress: destinationAddress ?? this.destinationAddress,
+        polyline: polyline ?? this.polyline,
+        rider: rider ?? this.rider,
+        onCameraMove: onCameraMove ?? this.onCameraMove,
+        riderLocation: riderLocation ?? this.riderLocation,
+        arivalDuration: arivalDuration ?? this.arivalDuration,
+        arrivingTimeState: arrivingTimeState ?? this.arrivingTimeState,
+        isBooked: isBooked ?? this.isBooked,
+        bookRideState: bookRideState ?? this.bookRideState,
+        uid: uid ?? this.uid,
+      );
 
   @override
   List<Object?> get props => [
         loadingState,
+        riderLocation,
         currentLocation,
         mapController,
         userModel,
         markers,
+        uid,
         destinationLocation,
         plineCoordinate,
         destinationAddress,
         pickUpAddress,
         polyline,
         onCameraMove,
-        rider
+        rider,
+        riderLoadingState,
+        arivalDuration,
+        arrivingTimeState,
+        isBooked,
+        bookRideState
       ];
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/app_constant/app_string.dart';
@@ -68,8 +71,10 @@ class _AvailableRideWidegetState extends State<AvailableRideWideget> {
           width: 300.w,
           child: PrimaryButton(
             onPressed: () {
+              BlocProvider.of<HomePageBloc>(context).add(
+                  GetRiderLocation(riderId: widget.rider[currentIndex].id!));
+
               context.push('/rideDetail', extra: widget.rider[currentIndex]);
-              log.d(currentIndex);
             },
             label: AppStrings.bookRide,
           ),
