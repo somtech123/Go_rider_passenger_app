@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
@@ -57,96 +58,143 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                 Positioned(
                   top: 10.h,
                   left: 50.w,
-                  child: SizedBox(
-                    width: 300,
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: () => context.push('/route'),
-                          child: CupertinoFormSection.insetGrouped(
-                            margin: EdgeInsets.zero,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(22),
-                            ),
+                  child: state.bookingRideState == BookingState.inProgess
+                      ? Container(
+                          width: 300.w,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15.r),
+                          ),
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(
+                              top: 10.h, left: 10.h, right: 10.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              AbsorbPointer(
-                                absorbing: true,
-                                child: CupertinoTextFormFieldRow(
-                                  textAlign: TextAlign.center,
-                                  prefix: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SvgPicture.asset('assets/svgs/from.svg'),
-                                      SizedBox(width: 5.w),
-                                      Text(
-                                        'From:',
+                              Text(
+                                'You are EnRoute',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall!
+                                    .copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.darkColor),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    homeloc
+                                        .add(ViewActiveRide(context: context));
+                                  },
+                                  child: Text(
+                                    'View ride',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall!
+                                        .copyWith(
+                                            fontSize: 14,
+                                            color: AppColor.primaryColor),
+                                  ))
+                            ],
+                          ))
+                      : SizedBox(
+                          width: 300,
+                          child: Column(
+                            children: [
+                              InkWell(
+                                onTap: () => context.push('/route'),
+                                child: CupertinoFormSection.insetGrouped(
+                                  margin: EdgeInsets.zero,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  children: [
+                                    AbsorbPointer(
+                                      absorbing: true,
+                                      child: CupertinoTextFormFieldRow(
+                                        textAlign: TextAlign.center,
+                                        prefix: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/svgs/from.svg'),
+                                            SizedBox(width: 5.w),
+                                            Text(
+                                              'From:',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          AppColor.greyColor),
+                                            )
+                                          ],
+                                        ),
+                                        placeholder: 'Your Location',
+                                        expands: true,
+                                        minLines: null,
+                                        maxLines: null,
+                                        controller: state.pickUpAddress,
+                                        onEditingComplete: () {},
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodySmall!
+                                            .headlineSmall!
                                             .copyWith(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColor.greyColor),
-                                      )
-                                    ],
-                                  ),
-                                  placeholder: 'Your Location',
-                                  expands: true,
-                                  minLines: null,
-                                  maxLines: null,
-                                  controller: state.pickUpAddress,
-                                  onEditingComplete: () {},
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .copyWith(
-                                          fontSize: 14,
-                                          color: AppColor.darkColor),
-                                ),
-                              ),
-                              AbsorbPointer(
-                                absorbing: true,
-                                child: CupertinoTextFormFieldRow(
-                                  placeholder: 'Your Destination',
-                                  textAlign: TextAlign.center,
-                                  controller: state.destinationAddress,
-                                  expands: true,
-                                  minLines: null,
-                                  maxLines: null,
-                                  onEditingComplete: () {},
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .copyWith(
-                                          fontSize: 14,
-                                          color: AppColor.darkColor),
-                                  prefix: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SvgPicture.asset('assets/svgs/to.svg'),
-                                      SizedBox(width: 5.w),
-                                      Text(
-                                        'To:',
+                                                fontSize: 14,
+                                                color: AppColor.darkColor),
+                                      ),
+                                    ),
+                                    AbsorbPointer(
+                                      absorbing: true,
+                                      child: CupertinoTextFormFieldRow(
+                                        placeholder: 'Your Destination',
+                                        textAlign: TextAlign.center,
+                                        controller: state.destinationAddress,
+                                        expands: true,
+                                        minLines: null,
+                                        maxLines: null,
+                                        onEditingComplete: () {},
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodySmall!
+                                            .headlineSmall!
                                             .copyWith(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColor.greyColor),
-                                      )
-                                    ],
-                                  ),
+                                                fontSize: 14,
+                                                color: AppColor.darkColor),
+                                        prefix: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/svgs/to.svg'),
+                                            SizedBox(width: 5.w),
+                                            Text(
+                                              'To:',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          AppColor.greyColor),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              SizedBox(height: 10.h),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10.h),
-                      ],
-                    ),
-                  ),
                 ),
                 Visibility(
                   visible: state.onCameraMove == true,

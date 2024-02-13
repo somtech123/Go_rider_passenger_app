@@ -11,10 +11,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/shared/shared_widget/custom_snackbar.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:location/location.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
@@ -53,7 +56,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           pickUpAddress: TextEditingController(),
           destinationAddress: TextEditingController(),
           onCameraMove: false,
-          isBooked: false,
+          currentRider: null,
+          // bookingRideState: BookingState.initial,
         )) {
     on<RequestLocation>((event, emit) async {
       await getLocationUpdate();
@@ -84,8 +88,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     });
 
     on<CancelRide>((event, emit) async {
-      cancelRide();
+      cancelRide(event.context);
     });
+
+    on<ViewActiveRide>((event, emit) => viewCurrentRide(event.context));
   }
 
   onCameraMove() {
@@ -335,8 +341,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         markers.add(currentLocationMarker);
 
         emit(state.copyWith(
-            markers: markers,
-            destinationLocation: LatLng(latitude, longitude)));
+          markers: markers,
+          destinationLocation: LatLng(latitude, longitude),
+          bookingRideState: BookingState.initial,
+        ));
       }
     }
   }
@@ -375,14 +383,15 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   bookRide({required RiderModel rider}) async {
-    var uuid = Uuid();
+    var uuid = const Uuid();
+
     String uid = uuid.v4();
 
     emit(state.copyWith(
-        isBooked: false,
         rider: [],
-        bookRideState: LoadingState.loading,
-        uid: uid));
+        bookingRideState: BookingState.inProgess,
+        uid: uid,
+        currentRider: rider));
 
     List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
         state.currentLocation!.latitude, state.currentLocation!.longitude);
@@ -406,19 +415,35 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           'dateCreated': DateTime.now().toIso8601String(),
         };
 
-    await _firebaseRepository.bookRide(payload: payload(), uid: uid);
+    // await _firebaseRepository.bookRide(payload: payload(), uid: uid);
 
-    emit(state.copyWith(isBooked: true, loadingState: LoadingState.loaded));
+    emit(state.copyWith(bookingRideState: BookingState.inProgess));
   }
 
-  cancelRide() async {
-    await _firebaseRepository.cancelRide(uid: state.uid!, payload: {
-      'rideStatus': 'cancel',
-    });
+  viewCurrentRide(BuildContext context) {
+    BlocProvider.of<HomePageBloc>(context)
+        .add(GetRiderLocation(riderId: state.currentRider!.id!));
+
+    context.push('/rideDetail', extra: state.currentRider);
+  }
+
+  cancelRide(BuildContext context) async {
+    // await _firebaseRepository.cancelRide(uid: state.uid!, payload: {
+    //   'rideStatus': 'cancel',
+    // });
+
+    showCustomSnackBar(message: 'you have cancelled this ride');
+
+    Set<Marker> markers = state.markers;
+    markers.removeWhere((element) => element.markerId.value == 'destination');
+
     emit(state.copyWith(
-      isBooked: false,
-      uid: '',
-      bookRideState: LoadingState.loading,
-    ));
+        uid: '',
+        bookingRideState: BookingState.cancelled,
+        destinationAddress: TextEditingController(text: ''),
+        destinationLocation: null,
+        markers: markers,
+        currentRider: null));
+    Navigator.of(context).pop();
   }
 }

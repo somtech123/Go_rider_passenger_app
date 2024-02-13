@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
@@ -100,10 +101,14 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                                           state.polyline.values),
                                     ),
                                   ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: _detailContainer(context,
-                                        riderModel: widget.riderModel),
+                                  Visibility(
+                                    visible: state.bookingRideState !=
+                                        BookingState.cancelled,
+                                    child: Positioned(
+                                      bottom: 0,
+                                      child: _detailContainer(context,
+                                          riderModel: widget.riderModel),
+                                    ),
                                   )
                                 ],
                               ),
@@ -229,15 +234,18 @@ Widget _detailContainer(BuildContext context,
             ),
             SizedBox(height: 10.h),
             PrimaryButton(
-              onPressed: state.isBooked == false
+              onPressed: state.bookingRideState == BookingState.initial
                   ? () {
                       BlocProvider.of<HomePageBloc>(context)
                           .add(BookRider(rider: riderModel));
                     }
                   : () {
-                      BlocProvider.of<HomePageBloc>(context).add(CancelRide());
+                      BlocProvider.of<HomePageBloc>(context)
+                          .add(CancelRide(context: context));
                     },
-              label: state.isBooked == false ? 'Start Ride' : 'Cancel Ride',
+              label: state.bookingRideState == BookingState.initial
+                  ? 'Start Ride'
+                  : 'Cancel Ride',
             ),
           ],
         ),

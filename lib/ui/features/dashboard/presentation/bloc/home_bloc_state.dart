@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
@@ -17,7 +18,7 @@ class HomePageState {
 
   LoadingState? arrivingTimeState;
 
-  LoadingState? bookRideState;
+  BookingState? bookingRideState;
 
   int? arivalDuration;
 
@@ -40,13 +41,14 @@ class HomePageState {
   bool onCameraMove;
   LocationModel? riderLocation;
   List<RiderModel>? rider;
-  bool? isBooked;
+  RiderModel? currentRider;
+
   String? uid;
 
   HomePageState({
     this.loadingState = LoadingState.initial,
     this.riderLoadingState = LoadingState.initial,
-    this.bookRideState = LoadingState.initial,
+    this.bookingRideState = BookingState.initial,
     this.currentLocation,
     this.destinationLocation,
     this.userModel,
@@ -61,8 +63,8 @@ class HomePageState {
     this.arivalDuration,
     this.arrivingTimeState = LoadingState.initial,
     this.rider,
-    this.isBooked,
     this.uid,
+    this.currentRider,
   });
 
   HomePageState copyWith({
@@ -82,31 +84,30 @@ class HomePageState {
     bool? onCameraMove,
     LoadingState? arrivingTimeState,
     int? arivalDuration,
-    bool? isBooked,
-    LoadingState? bookRideState,
+    BookingState? bookingRideState,
     String? uid,
+    RiderModel? currentRider,
   }) =>
       HomePageState(
-        loadingState: loadingState ?? this.loadingState,
-        riderLoadingState: riderLoadingState ?? this.riderLoadingState,
-        destinationLocation: destinationLocation ?? this.destinationLocation,
-        currentLocation: currentLocation ?? this.currentLocation,
-        mapController: mapController ?? this.mapController,
-        userModel: userModel ?? this.userModel,
-        markers: markers ?? this.markers,
-        plineCoordinate: plineCoordinate ?? this.plineCoordinate,
-        pickUpAddress: pickUpAddress ?? this.pickUpAddress,
-        destinationAddress: destinationAddress ?? this.destinationAddress,
-        polyline: polyline ?? this.polyline,
-        rider: rider ?? this.rider,
-        onCameraMove: onCameraMove ?? this.onCameraMove,
-        riderLocation: riderLocation ?? this.riderLocation,
-        arivalDuration: arivalDuration ?? this.arivalDuration,
-        arrivingTimeState: arrivingTimeState ?? this.arrivingTimeState,
-        isBooked: isBooked ?? this.isBooked,
-        bookRideState: bookRideState ?? this.bookRideState,
-        uid: uid ?? this.uid,
-      );
+          loadingState: loadingState ?? this.loadingState,
+          riderLoadingState: riderLoadingState ?? this.riderLoadingState,
+          destinationLocation: destinationLocation ?? this.destinationLocation,
+          currentLocation: currentLocation ?? this.currentLocation,
+          mapController: mapController ?? this.mapController,
+          userModel: userModel ?? this.userModel,
+          markers: markers ?? this.markers,
+          plineCoordinate: plineCoordinate ?? this.plineCoordinate,
+          pickUpAddress: pickUpAddress ?? this.pickUpAddress,
+          destinationAddress: destinationAddress ?? this.destinationAddress,
+          polyline: polyline ?? this.polyline,
+          rider: rider ?? this.rider,
+          onCameraMove: onCameraMove ?? this.onCameraMove,
+          riderLocation: riderLocation ?? this.riderLocation,
+          arivalDuration: arivalDuration ?? this.arivalDuration,
+          arrivingTimeState: arrivingTimeState ?? this.arrivingTimeState,
+          bookingRideState: bookingRideState ?? this.bookingRideState,
+          uid: uid ?? this.uid,
+          currentRider: currentRider ?? this.currentRider);
 
   @override
   List<Object?> get props => [
@@ -127,7 +128,7 @@ class HomePageState {
         riderLoadingState,
         arivalDuration,
         arrivingTimeState,
-        isBooked,
-        bookRideState
+        bookingRideState,
+        currentRider
       ];
 }

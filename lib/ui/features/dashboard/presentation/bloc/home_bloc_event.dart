@@ -51,7 +51,16 @@ class BookRider extends HomePageBlocEvent {
   List<Object?> get props => [rider];
 }
 
-class CancelRide extends HomePageBlocEvent {
+class ViewActiveRide extends HomePageBlocEvent {
+  BuildContext context;
+  ViewActiveRide({required this.context});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [context];
+}
+
+class CancelRide extends HomePageBlocEvent {
+  BuildContext context;
+  CancelRide({required this.context});
+  @override
+  List<Object?> get props => [context];
 }
