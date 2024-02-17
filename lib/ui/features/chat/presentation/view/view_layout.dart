@@ -2,10 +2,10 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc_event.dart';
 import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc_state.dart';
+import 'package:go_rider/ui/features/chat/presentation/view/widget/chat_widgets.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
@@ -25,19 +25,18 @@ class _ViewLayoutState extends State<ViewLayout> {
   void initState() {
     super.initState();
 
-    setUser();
-
-    BlocProvider.of<ChatBloc>(context).add(FetchMessage(
-        senderId: widget.sender.userId!,
-        receiverId: widget.receiver.id!,
-        receiver: receiver!,
-        user: user!));
+    setUser().then((value) => BlocProvider.of<ChatBloc>(context).add(
+        FetchMessage(
+            senderId: widget.sender.userId!,
+            receiverId: widget.receiver.id!,
+            receiver: receiver!,
+            user: user!)));
   }
 
   ChatUser? user;
   ChatUser? receiver;
 
-  setUser() {
+  Future<void> setUser() async {
     user = ChatUser(
       id: widget.sender.userId!,
       profileImage: widget.sender.profileImage,
@@ -56,7 +55,6 @@ class _ViewLayoutState extends State<ViewLayout> {
   Widget build(BuildContext context) {
     final ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
           leading: IconButton(
@@ -74,13 +72,9 @@ class _ViewLayoutState extends State<ViewLayout> {
                 color: AppColor.whiteColor),
           ),
           actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 15.h),
-              child: SvgPicture.asset(
-                'assets/svgs/notification.svg',
-                height: 20.h,
-                width: 20.w,
-              ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.call),
             ),
           ],
         ),
@@ -94,12 +88,28 @@ class _ViewLayoutState extends State<ViewLayout> {
                   DashChat(
                     currentUser: user!,
                     onSend: (ChatMessage m) {
-                      setState(() {
-                        // messages.insert(0, m);
-                      });
+                      chatBloc.add(SendMessage(
+                          message: m,
+                          sender: widget.sender,
+                          receiver: widget.receiver));
                     },
                     messages: state.messages!,
+                    inputOptions: InputOptions(
+                      inputToolbarStyle: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                        10,
+                      )),
+                      sendOnEnter: true,
+                    ),
+                    messageOptions: MessageOptions(
+                      showTime: true,
+                      messagePadding: EdgeInsets.all(15.h),
+                    ),
+                    messageListOptions: const MessageListOptions(),
                   ),
+                  state.messages!.isEmpty
+                      ? noMessages(context)
+                      : const SizedBox()
                 ],
               );
             },

@@ -1,3 +1,5 @@
+import 'package:go_rider/utils/app_constant/app_string.dart';
+
 class RiderModel {
   String? email;
   String? id;
@@ -31,6 +33,9 @@ class RiderModel {
       rideColor: json['rideColor'],
       rideModel: json['rideModel'],
       noOfSeat: json['noOfSeat'],
+      profileImage: json["profileImage"].isEmpty
+          ? AppStrings.dummyProfilePicture
+          : json['profileImage'],
       ridePlate: json['ridePlate']);
 
   RiderModel copyWith({

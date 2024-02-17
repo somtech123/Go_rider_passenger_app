@@ -1,3 +1,5 @@
+import 'package:go_rider/utils/app_constant/app_string.dart';
+
 class UserModel {
   String? email;
   String? username;
@@ -17,9 +19,9 @@ class UserModel {
         username: json['userName'],
         userId: json['id'],
         dateCreated: DateTime.parse(json['dateCreated']),
-        // profileImage: json["profileImage"].isEmpty
-        //     ? AppStrings.dummyProfilePicture
-        //     : json['profileImage'],
+        profileImage: json["profileImage"].isEmpty
+            ? AppStrings.dummyProfilePicture
+            : json['profileImage'],
       );
 
   UserModel copyWith({
