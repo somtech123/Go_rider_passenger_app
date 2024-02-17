@@ -14,3 +14,8 @@ class Login extends LoginEvenet {
   @override
   List<Object?> get props => [email, password, context];
 }
+
+class ObsureText extends LoginEvenet {
+  @override
+  List<Object?> get props => [];
+}

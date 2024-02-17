@@ -17,13 +17,21 @@ var log = getLogger('Signup_bloc');
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc()
       : super(SignUpState(
-            signUpMessage: '', loadingState: LoadingState.initial)) {
+            signUpMessage: '',
+            loadingState: LoadingState.initial,
+            isVisible: true)) {
     on<SignUp>((event, emit) async {
       await signup(event.context,
           email: event.email,
           password: event.password,
           username: event.username);
     });
+
+    on<ObsureText>((event, emit) => obsureText());
+  }
+
+  obsureText() {
+    emit(state.copyWith(isVisible: !state.isVisible!));
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;

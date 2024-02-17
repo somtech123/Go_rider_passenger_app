@@ -14,13 +14,19 @@ import 'package:go_router/go_router.dart';
 var log = getLogger('Login_bloc');
 
 class LoginBloc extends Bloc<LoginEvenet, LoginState> {
-  LoginBloc() : super(LoginState()) {
+  LoginBloc() : super(LoginState(isVisible: true)) {
     on<Login>((event, emit) async {
       await login(event.context, email: event.email, password: event.password);
     });
+
+    on<ObsureText>((event, emit) => obsureText());
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  obsureText() {
+    emit(state.copyWith(isVisible: !state.isVisible!));
+  }
 
   login(
     BuildContext context, {

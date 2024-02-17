@@ -64,7 +64,7 @@ class AppTextField extends StatelessWidget {
     this.textInputAction,
     this.controller,
     this.focusNode,
-    this.borderRadius = 6.0,
+    this.borderRadius = 10.0,
     this.enabled = true,
     this.inputFormatters,
     this.maxLines,

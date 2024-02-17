@@ -17,3 +17,8 @@ class SignUp extends SignUpEvent {
   @override
   List<Object?> get props => [email, password, username, context];
 }
+
+class ObsureText extends SignUpEvent {
+  @override
+  List<Object?> get props => [];
+}
