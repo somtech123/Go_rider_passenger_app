@@ -1,131 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_rider/app/helper/local_state_helper.dart';
+import 'package:go_rider/ui/features/history/presentation/bloc/history_bloc.dart';
+import 'package:go_rider/ui/features/history/presentation/bloc/history_bloc_event.dart';
+import 'package:go_rider/ui/features/history/presentation/bloc/history_bloc_state.dart';
+import 'package:go_rider/ui/features/history/presentation/view/state_view/error_state_view.dart';
+import 'package:go_rider/ui/features/history/presentation/view/state_view/loaded_state_view.dart';
+import 'package:go_rider/ui/features/history/presentation/view/state_view/loading_state_view.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    BlocProvider.of<HistoryBloc>(context).add(GetRideHistory());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColor.primaryColor,
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back_ios)),
-        iconTheme: const IconThemeData(color: AppColor.whiteColor),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 15.h),
-            child: SvgPicture.asset(
-              'assets/svgs/notification.svg',
-              height: 20.h,
-              width: 20.w,
+        appBar: AppBar(
+          backgroundColor: AppColor.primaryColor,
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_ios)),
+          iconTheme: const IconThemeData(color: AppColor.whiteColor),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 15.h),
+              child: SvgPicture.asset(
+                'assets/svgs/notification.svg',
+                height: 20.h,
+                width: 20.w,
+              ),
             ),
+          ],
+          title: Text(
+            'Ride History',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColor.whiteColor),
           ),
-        ],
-        title: Text(
-          'Ride History',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppColor.whiteColor),
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 15.h, right: 15.h, top: 15.h),
-            child: Text(
-              'Showing Ride History',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: AppColor.darkColor),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index) => _historyCard(context),
-              itemCount: 10,
-            ),
-          )
-        ],
-      ),
-    );
+        body: BlocBuilder<HistoryBloc, HistoryBlocState>(
+          builder: (context, state) {
+            if (state.loadingState == LoadingState.loading) {
+              return const HistoryLoadingStateView();
+            } else if (state.loadingState == LoadingState.loaded) {
+              return HistoryLoadedStateView(data: state.historyModel!);
+            } else {
+              return const HistoryErrorStateView();
+            }
+          },
+        ));
   }
-}
-
-Widget _historyCard(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.all(10.h),
-    child: Container(
-      height: 90.h,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: AppColor.whiteColor,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColor.fillColor,
-            spreadRadius: 5,
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 20.h,
-            child: ListTile(
-              leading: SvgPicture.asset('assets/svgs/home.svg'),
-              title: Text(
-                'Daniyore Gilgit',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(fontWeight: FontWeight.w400, fontSize: 12),
-              ),
-              trailing: Text(
-                '06/April/2023',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(fontWeight: FontWeight.w400, fontSize: 12),
-              ),
-            ),
-          ),
-          SizedBox(height: 20.h),
-          SizedBox(
-            height: 20.h,
-            child: ListTile(
-              leading: SvgPicture.asset('assets/svgs/location.svg'),
-              title: Text(
-                'Home',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(fontWeight: FontWeight.w500, fontSize: 14),
-              ),
-              trailing: Text(
-                "Usd320",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(fontWeight: FontWeight.w400, fontSize: 12),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }

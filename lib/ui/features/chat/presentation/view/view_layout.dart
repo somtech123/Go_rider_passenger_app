@@ -1,85 +1,109 @@
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc_event.dart';
+import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc_state.dart';
+import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 
-class ViewLayout extends StatelessWidget {
-  const ViewLayout({super.key});
+// ignore: must_be_immutable
+class ViewLayout extends StatefulWidget {
+  ViewLayout({super.key, required this.sender, required this.receiver});
+  UserModel sender;
+  RiderModel receiver;
+
+  @override
+  State<ViewLayout> createState() => _ViewLayoutState();
+}
+
+class _ViewLayoutState extends State<ViewLayout> {
+  @override
+  void initState() {
+    super.initState();
+
+    setUser();
+
+    BlocProvider.of<ChatBloc>(context).add(FetchMessage(
+        senderId: widget.sender.userId!,
+        receiverId: widget.receiver.id!,
+        receiver: receiver!,
+        user: user!));
+  }
+
+  ChatUser? user;
+  ChatUser? receiver;
+
+  setUser() {
+    user = ChatUser(
+      id: widget.sender.userId!,
+      profileImage: widget.sender.profileImage,
+      firstName: widget.sender.username,
+    );
+
+    receiver = ChatUser(
+        id: widget.receiver.id!,
+        profileImage: widget.receiver.profileImage,
+        firstName: widget.receiver.username);
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_ios)),
+          iconTheme: const IconThemeData(color: AppColor.whiteColor),
+          backgroundColor: AppColor.primaryColor,
+          title: Text(
+            'Inbox',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColor.whiteColor),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 15.h),
+              child: SvgPicture.asset(
+                'assets/svgs/notification.svg',
+                height: 20.h,
+                width: 20.w,
+              ),
+            ),
+          ],
+        ),
+        body: BlocListener<ChatBloc, ChatBlocState>(
+          listener: (context, state) {},
+          child: BlocBuilder<ChatBloc, ChatBlocState>(
+            bloc: chatBloc,
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  DashChat(
+                    currentUser: user!,
+                    onSend: (ChatMessage m) {
+                      setState(() {
+                        // messages.insert(0, m);
+                      });
+                    },
+                    messages: state.messages!,
+                  ),
+                ],
+              );
             },
-            icon: const Icon(Icons.arrow_back_ios)),
-        iconTheme: const IconThemeData(color: AppColor.whiteColor),
-        backgroundColor: AppColor.primaryColor,
-        title: Text(
-          'Inbox',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColor.whiteColor),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 15.h),
-            child: SvgPicture.asset(
-              'assets/svgs/notification.svg',
-              height: 20.h,
-              width: 20.w,
-            ),
           ),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: EdgeInsets.all(20.h),
-        child: ClipPath(
-          clipper: ArcPainter(),
-          child: Container(
-            height: 50.h,
-            decoration: BoxDecoration(
-              color: AppColor.darkColor,
-              borderRadius: BorderRadius.circular(20.r),
-              boxShadow: const [
-                BoxShadow(
-                  color: AppColor.fillColor,
-                  spreadRadius: 5,
-                  blurRadius: 5,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            width: MediaQuery.of(context).size.width,
-          ),
-        ),
-      ),
-    );
+        ));
   }
-}
-
-class ArcPainter extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.lineTo(size.width, 0); // Move to top right corner
-    path.quadraticBezierTo(
-      size.width,
-      size.height / 2,
-      size.width / 2,
-      size.height,
-    ); // Draw a curve to bottom right corner
-    path.lineTo(0, size.height); // Move to bottom left corner
-    path.lineTo(0, 0); // Close the path
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

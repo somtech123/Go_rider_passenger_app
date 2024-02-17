@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
+import 'package:go_rider/ui/features/chat/presentation/view/view_layout.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
@@ -12,6 +13,7 @@ import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state
 import 'package:go_rider/ui/features/dashboard/presentation/view/state_view.dart/my_error_state_view.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // ignore: must_be_immutable
@@ -153,6 +155,17 @@ Widget _detailContainer(BuildContext context,
                 trailing: InkWell(
                   onTap: () {
                     //  context.push('/chatPage');
+                    // context.goNamed('chatDetail', queryParameters: {
+                    //   'receiver': riderModel,
+                    //   'sender': state.userModel,
+                    // });
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ViewLayout(
+                        sender: state.userModel!,
+                        receiver: riderModel,
+                      ),
+                    ));
                   },
                   child: CircleAvatar(
                     backgroundColor: AppColor.primaryColor,

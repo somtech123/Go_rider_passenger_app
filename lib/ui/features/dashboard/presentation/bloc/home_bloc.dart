@@ -21,7 +21,7 @@ import 'package:go_router/go_router.dart';
 import 'package:location/location.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
-import 'package:go_rider/app/services/firebase_repository.dart';
+import 'package:go_rider/app/services/firebase_services/firebase_repository.dart';
 import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
@@ -94,6 +94,12 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     on<ViewActiveRide>((event, emit) => viewCurrentRide(event.context));
   }
 
+  @override
+  Future<void> close() {
+    state.mapController = Completer();
+    return super.close();
+  }
+
   onCameraMove() {
     emit(state.copyWith(onCameraMove: true));
   }
@@ -105,20 +111,15 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         state.currentLocation!.latitude, state.currentLocation!.longitude));
   }
 
-  @override
-  Future<void> close() {
-    state.mapController = Completer();
-    return super.close();
-  }
-
   getUserDetail() async {
     emit(state.copyWith(
         loadingState: LoadingState.loading, userModel: UserModel()));
 
     try {
-      User currentUser = _auth.currentUser!;
-      DocumentSnapshot<Map<String, dynamic>> snap =
-          await _firestore.collection("users").doc(currentUser.uid).get();
+      DocumentSnapshot<Map<String, dynamic>> snap = await _firestore
+          .collection("users")
+          .doc(_auth.currentUser!.uid)
+          .get();
 
       UserModel userModel = UserModel.fromJson(snap.data()!);
 
@@ -181,6 +182,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await state.mapController.future;
+
     CameraPosition position = CameraPosition(target: pos, zoom: 14);
 
     await controller.animateCamera(CameraUpdate.newCameraPosition(position));
@@ -292,17 +294,11 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   Future<void> selectPickUpLocation(BuildContext context) async {
     await autoComplete(context).then((value) => getRider());
-    // then((_) => getPolyPointCordinate(LatLng(
-    //     state.destinationLocation!.latitude,
-    //     state.destinationLocation!.longitude)))
-    // .then((value) => generatePolyLine(value));
   }
 
   Future<void> autoComplete(BuildContext context) async {
     emit(state.copyWith(
-      rider: [],
-      destinationAddress: null,
-    ));
+        rider: [], destinationAddress: TextEditingController(text: '')));
 
     mapServices.Prediction? prediction = await PlacesAutocomplete.show(
         context: context,
@@ -415,7 +411,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           'dateCreated': DateTime.now().toIso8601String(),
         };
 
-    // await _firebaseRepository.bookRide(payload: payload(), uid: uid);
+    await _firebaseRepository.bookRide(payload: payload(), uid: uid);
 
     emit(state.copyWith(bookingRideState: BookingState.inProgess));
   }
@@ -428,9 +424,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   cancelRide(BuildContext context) async {
-    // await _firebaseRepository.cancelRide(uid: state.uid!, payload: {
-    //   'rideStatus': 'cancel',
-    // });
+    await _firebaseRepository
+        .cancelRide(uid: state.uid!, payload: {'rideStatus': 'cancel'});
 
     showCustomSnackBar(message: 'you have cancelled this ride');
 

@@ -5,6 +5,7 @@ import 'package:go_rider/ui/features/authentication/signup/prsentation/view/sign
 import 'package:go_rider/ui/features/chat/presentation/view/chat_screen.dart';
 import 'package:go_rider/ui/features/chat/presentation/view/view_layout.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/home_screen.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/ride_detail_screen.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/view/route_screen.dart';
@@ -49,7 +50,17 @@ class AppRouter {
       GoRoute(
           path: '/chatPage', builder: (context, state) => const ChatScreen()),
       GoRoute(
-          path: '/chatDetail', builder: (context, state) => const ViewLayout())
+        path: '/chatDetail/:receiver/:sender',
+        name: 'chatDetail',
+        pageBuilder: (context, state) {
+          return CustomSlideTransition(
+              key: state.pageKey,
+              child: ViewLayout(
+                receiver: state.uri.queryParameters['receiver'] as RiderModel,
+                sender: state.uri.queryParameters['sender'] as UserModel,
+              ));
+        },
+      )
     ],
   );
 }

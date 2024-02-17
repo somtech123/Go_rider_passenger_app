@@ -92,6 +92,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       required String email}) async {
     await _firestore.collection("users").doc(uid).set({
       "userName": username,
+      'id': uid,
       'email': email,
       "dateCreated": DateTime.now().toIso8601String(),
     });

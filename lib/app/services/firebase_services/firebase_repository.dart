@@ -1,6 +1,7 @@
-import 'package:go_rider/app/services/firebase_method.dart';
+import 'package:go_rider/app/services/firebase_services/firebase_method.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/features/history/data/history_model.dart';
 
 class FirebaseRepository {
   final FirebaseMethod _firebaseMethod = FirebaseMethod();
@@ -25,4 +26,11 @@ class FirebaseRepository {
     required Map<String, dynamic> payload,
   }) =>
       _firebaseMethod.cancelRide(uid: uid, payload: payload);
+
+  Future<List<HistoryModel>> getRideHistory() =>
+      _firebaseMethod.getRideHistory();
+
+  Future<void> getFirebaaseuser(
+          {required String collection, required String uid}) =>
+      _firebaseMethod.getFirebaaseuser(collection: collection, uid: uid);
 }

@@ -3,12 +3,19 @@ class UserModel {
   String? username;
   String? profileImage;
   DateTime? dateCreated;
-
-  UserModel({this.email, this.profileImage, this.username, this.dateCreated});
+  final String? userId;
+  UserModel({
+    this.email,
+    this.profileImage,
+    this.username,
+    this.dateCreated,
+    this.userId,
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         email: json['email'],
         username: json['userName'],
+        userId: json['id'],
         dateCreated: DateTime.parse(json['dateCreated']),
         // profileImage: json["profileImage"].isEmpty
         //     ? AppStrings.dummyProfilePicture

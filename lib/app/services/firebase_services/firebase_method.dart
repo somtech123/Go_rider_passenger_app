@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/features/history/data/history_model.dart';
 
 var log = getLogger('Firebase_method');
 
@@ -90,5 +91,33 @@ class FirebaseMethod {
     }
 
     return locationModel;
+  }
+
+  Future<List<HistoryModel>> getRideHistory() async {
+    List<HistoryModel> data = [];
+    try {
+      var snap = await _userCollection
+          .doc(_auth.currentUser!.uid)
+          .collection('ride')
+          .get();
+
+      data = snap.docs
+          .map((DocumentSnapshot<Map<String, dynamic>> e) =>
+              HistoryModel.fromJson(e.data()!))
+          .toList();
+    } catch (e) {
+      log.w(e);
+      return [];
+    }
+    return data;
+  }
+
+  Future<void> getFirebaaseuser(
+      {required String collection, required String uid}) async {
+    try {
+      await _firestore.collection(collection).doc(uid).get();
+    } catch (e) {
+      log.e(e);
+    }
   }
 }
