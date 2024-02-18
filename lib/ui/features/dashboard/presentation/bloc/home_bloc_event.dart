@@ -64,3 +64,8 @@ class CancelRide extends HomePageBlocEvent {
   @override
   List<Object?> get props => [context];
 }
+
+class StoreFcmToken extends HomePageBlocEvent {
+  @override
+  List<Object?> get props => [];
+}

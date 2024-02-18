@@ -154,12 +154,6 @@ Widget _detailContainer(BuildContext context,
                 leading: CircleAvatar(radius: 30.r),
                 trailing: InkWell(
                   onTap: () {
-                    //  context.push('/chatPage');
-                    // context.goNamed('chatDetail', queryParameters: {
-                    //   'receiver': riderModel,
-                    //   'sender': state.userModel,
-                    // });
-
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ViewLayout(
                         sender: state.userModel!,

@@ -55,18 +55,18 @@ class AppRouter {
           builder: (context, state) => const HistoryScreen()),
       GoRoute(
           path: '/chatPage', builder: (context, state) => const ChatScreen()),
-      GoRoute(
-        path: '/chatDetail/:receiver/:sender',
-        name: 'chatDetail',
-        pageBuilder: (context, state) {
-          return CustomSlideTransition(
-              key: state.pageKey,
-              child: ViewLayout(
-                receiver: state.uri.queryParameters['receiver'] as RiderModel,
-                sender: state.uri.queryParameters['sender'] as UserModel,
-              ));
-        },
-      )
+      // GoRoute(
+      //   path: '/chatDetail/:receiver/:sender',
+      //   name: 'chatDetail',
+      //   pageBuilder: (context, state) {
+      //     return CustomSlideTransition(
+      //         key: state.pageKey,
+      //         child: ViewLayout(
+      //           receiver: state.uri.queryParameters['receiver'] as RiderModel,
+      //           sender: state.uri.queryParameters['sender'] as UserModel,
+      //         ));
+      //   },
+      // )
     ],
   );
 }

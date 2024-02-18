@@ -139,11 +139,23 @@ class FirebaseMethod {
       TaskSnapshot snap = await uploadTask;
 
       imageUrl = await snap.ref.getDownloadURL();
-    } catch (e) {}
+    } catch (e) {
+      log.e(e);
+    }
     return imageUrl;
   }
 
   Future<void> updateProfile({
+    required Map<String, dynamic> payload,
+  }) async {
+    try {
+      _userCollection.doc(_auth.currentUser!.uid).update(payload);
+    } catch (e) {
+      log.e(e);
+    }
+  }
+
+  Future<void> storeFcmToken({
     required Map<String, dynamic> payload,
   }) async {
     try {

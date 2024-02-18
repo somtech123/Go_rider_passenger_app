@@ -96,6 +96,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
         userId: receiver.id,
         profileUrl: receiver.profileImage);
 
-    await _repository.sendMessage(_message, _sender, _receiver);
+    await _repository.sendMessage(
+        _message, _sender, _receiver, sender.fcmToken!);
   }
 }

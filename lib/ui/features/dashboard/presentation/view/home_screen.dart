@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
     BlocProvider.of<HomePageBloc>(context).add(GetUserDetails());
 
     BlocProvider.of<HomePageBloc>(context).add(RequestLocation());
+
+    BlocProvider.of<HomePageBloc>(context).add(StoreFcmToken());
   }
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,7 +13,6 @@ import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.
 import 'package:flutter_google_places_hoc081098/google_maps_webservice_places.dart'
     as mapServices;
 import 'package:geocoding/geocoding.dart' as geo;
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
@@ -94,6 +94,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     });
 
     on<ViewActiveRide>((event, emit) => viewCurrentRide(event.context));
+
+    on<StoreFcmToken>((event, emit) async {
+      await storeFcmToken();
+    });
   }
 
   @override
@@ -442,6 +446,16 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         markers: markers,
         currentRider: null));
     Navigator.of(context).pop();
+  }
+
+  storeFcmToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    log.w(token);
+
+    if (token != null) {
+      await _firebaseRepository.storeFcmToken(payload: {'fcmToken': token});
+    } else {}
   }
 
   // calculateFare() async {

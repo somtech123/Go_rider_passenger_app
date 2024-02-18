@@ -6,6 +6,6 @@ class ChatRepository {
   final ChatsMethod _chatsMethod = ChatsMethod();
 
   Future<void> sendMessage(ChatMessageModel2 message, ChatUserModel sender,
-          ChatUserModel receiver) =>
-      _chatsMethod.addMessageToDb2(message, sender, receiver);
+          ChatUserModel receiver, String fcm) =>
+      _chatsMethod.addMessageToDb2(message, sender, receiver, fcm);
 }

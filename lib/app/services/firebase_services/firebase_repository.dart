@@ -43,4 +43,9 @@ class FirebaseRepository {
     required Map<String, dynamic> payload,
   }) =>
       _firebaseMethod.updateProfile(payload: payload);
+
+  Future<void> storeFcmToken({
+    required Map<String, dynamic> payload,
+  }) =>
+      _firebaseMethod.storeFcmToken(payload: payload);
 }
