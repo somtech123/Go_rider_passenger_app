@@ -34,7 +34,9 @@ Widget _drawerList(BuildContext context) {
           context,
           svgPath: 'assets/svgs/profile.svg',
           name: AppStrings.acount,
-          ontap: () {},
+          ontap: () {
+            context.push('/account');
+          },
         ),
         SizedBox(height: 20.h),
         _drawerItem(

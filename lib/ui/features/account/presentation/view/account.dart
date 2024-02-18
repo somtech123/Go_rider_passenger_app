@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
-import 'package:go_rider/ui/features/history/presentation/bloc/history_bloc.dart';
-import 'package:go_rider/ui/features/history/presentation/bloc/history_bloc_event.dart';
-import 'package:go_rider/ui/features/history/presentation/bloc/history_bloc_state.dart';
-import 'package:go_rider/ui/features/history/presentation/view/state_view/error_state_view.dart';
-import 'package:go_rider/ui/features/history/presentation/view/state_view/loaded_state_view.dart';
-import 'package:go_rider/ui/features/history/presentation/view/state_view/loading_state_view.dart';
+import 'package:go_rider/ui/features/account/presentation/bloc/account_bloc.dart';
+import 'package:go_rider/ui/features/account/presentation/bloc/account_bloc_state.dart';
+import 'package:go_rider/ui/features/account/presentation/bloc/account_event.dart';
+import 'package:go_rider/ui/features/account/presentation/view/state_view/error_state_view.dart';
+import 'package:go_rider/ui/features/account/presentation/view/state_view/loaded_state_view.dart';
+import 'package:go_rider/ui/features/account/presentation/view/state_view/loading_state_view.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 
-class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
-
-    BlocProvider.of<HistoryBloc>(context).add(GetRideHistory());
+    BlocProvider.of<AccountBloc>(context).add(GetAccountDetail());
   }
 
   @override
@@ -44,14 +43,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 color: AppColor.whiteColor),
           ),
         ),
-        body: BlocBuilder<HistoryBloc, HistoryBlocState>(
+        body: BlocBuilder<AccountBloc, AccountBlocState>(
           builder: (context, state) {
             if (state.loadingState == LoadingState.loading) {
-              return const HistoryLoadingStateView();
+              return const AccountLoadingStateView();
             } else if (state.loadingState == LoadingState.loaded) {
-              return HistoryLoadedStateView(data: state.historyModel!);
+              return AccountLoadedStateView(state: state);
             } else {
-              return const HistoryErrorStateView();
+              return const AccountErrorStateView();
             }
           },
         ));

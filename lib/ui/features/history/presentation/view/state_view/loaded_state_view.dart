@@ -29,6 +29,7 @@ class HistoryLoadedStateView extends StatelessWidget {
         Expanded(
           flex: 1,
           child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) => _historyCard(
               context,
@@ -83,7 +84,7 @@ Widget _historyCard(
                     .copyWith(fontWeight: FontWeight.w400, fontSize: 12),
               ),
               trailing: Text(
-                DateFormat('DD/M/YYYY').format(date),
+                DateFormat('dd/MMMM/yyyy').format(date),
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!

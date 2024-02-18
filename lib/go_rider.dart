@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_rider/app/resouces/app_router.dart';
 import 'package:go_rider/app/resouces/navigation_services.dart';
+import 'package:go_rider/ui/features/account/presentation/bloc/account_bloc.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_bloc.dart';
 import 'package:go_rider/ui/features/authentication/signup/prsentation/bloc/sign_up_bloc.dart';
 import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc.dart';
@@ -30,7 +31,8 @@ class _GoRiderState extends State<GoRider> {
           BlocProvider<SignUpBloc>(create: (context) => SignUpBloc()),
           BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
           BlocProvider<HistoryBloc>(create: (context) => HistoryBloc()),
-          BlocProvider<ChatBloc>(create: (context) => ChatBloc())
+          BlocProvider<ChatBloc>(create: (context) => ChatBloc()),
+          BlocProvider<AccountBloc>(create: (context) => AccountBloc()),
         ],
         child: ChangeNotifierProvider(
           create: (_) {},

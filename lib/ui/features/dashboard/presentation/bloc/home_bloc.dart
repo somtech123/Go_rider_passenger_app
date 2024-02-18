@@ -1,4 +1,4 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member, use_build_context_synchronously, unnecessary_null_comparison, depend_on_referenced_packages
+// ignore_for_file: invalid_use_of_visible_for_testing_member, use_build_context_synchronously, unnecessary_null_comparison, depend_on_referenced_packages, library_prefixes
 
 import 'dart:async';
 import 'dart:convert';
@@ -9,7 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
+import 'package:flutter_google_places_hoc081098/google_maps_webservice_places.dart'
+    as mapServices;
 import 'package:geocoding/geocoding.dart' as geo;
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
@@ -26,8 +29,7 @@ import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_event.dart';
 import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// ignore: library_prefixes
-import 'package:google_maps_webservice/places.dart' as mapServices;
+
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
@@ -308,7 +310,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         types: [],
         language: "en",
         components: [
-          mapServices.Component(mapServices.Component.country, "NG")
+          const mapServices.Component(mapServices.Component.country, "NG")
         ]);
 
     if (prediction != null) {
@@ -441,4 +443,11 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         currentRider: null));
     Navigator.of(context).pop();
   }
+
+  // calculateFare() async {
+  //   double distanceInMeters = await Geolocator
+  //       .distanceBetween(52.2165157, 6.9437819, 52.3546274, 4.8285838);
+
+  //       Geolocator.
+  // }
 }

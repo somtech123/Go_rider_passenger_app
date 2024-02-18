@@ -23,16 +23,11 @@ class HomeDrawerHeader extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Padding(
-                    //     padding: EdgeInsets.only(right: 15.h, bottom: 20.h),
-                    //     child:
                     IconButton(
                         onPressed: () {
                           scaffoldKey.currentState!.closeDrawer();
                         },
-                        icon: const Icon(Icons.close))
-                    //)
-                    ,
+                        icon: const Icon(Icons.close)),
                   ],
                 ),
                 Container(
@@ -40,8 +35,9 @@ class HomeDrawerHeader extends StatelessWidget {
                   child: ListTile(
                     leading: CircleAvatar(
                       radius: 40.r,
-                      backgroundImage:
-                          NetworkImage(AppStrings.dummyProfilePicture),
+                      backgroundImage: NetworkImage(
+                          state.userModel!.profileImage ??
+                              AppStrings.dummyProfilePicture),
                     ),
                     title: Text(
                       state.userModel!.username!,

@@ -52,5 +52,15 @@
 	
 	<string>NSLocationAlwaysAndWhenInUseUsageDescription</string>
 	<key>wants to display map on this device</key>
+
+	<string>NSPhotoLibraryUsageDescription</string>
+	<key>needs permission for the photo library</key>
+
+	<string>NSCameraUsageDescription</string>
+	<key>needs permission for the camera</key>
+
+	<string>NSMicrophoneUsageDescription</string>
+	<key>needs access to the microphone</key>
+
 </dict>
 </plist>

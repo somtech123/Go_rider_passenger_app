@@ -1,4 +1,5 @@
 class AppStrings {
+  static const String appName = 'Go Rider';
   static const String home = 'Home';
   static const String enterEmail = 'Enter Your Email';
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:go_rider/app/services/firebase_services/firebase_method.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
@@ -33,4 +35,12 @@ class FirebaseRepository {
   Future<void> getFirebaaseuser(
           {required String collection, required String uid}) =>
       _firebaseMethod.getFirebaaseuser(collection: collection, uid: uid);
+
+  Future<String> updateProfilePhoto(File file) =>
+      _firebaseMethod.updateProfilePhoto(file);
+
+  Future<void> updateProfile({
+    required Map<String, dynamic> payload,
+  }) =>
+      _firebaseMethod.updateProfile(payload: payload);
 }
