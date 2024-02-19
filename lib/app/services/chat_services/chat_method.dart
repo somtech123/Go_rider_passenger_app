@@ -32,7 +32,9 @@ class ChatsMethod {
   DocumentReference getReceiverDocument({String? of, String? forContact}) =>
       _riderCollection.doc(of).collection('contacts').doc(forContact);
 
-  Future<void> addToSenderContacts(
+  //add the contact to the sender document
+
+  Future<void> _addToSenderContacts(
       String senderId, String receiverId, currentTime) async {
     DocumentSnapshot snap =
         await getContactsDocument(of: senderId, forContact: receiverId).get();
@@ -47,11 +49,9 @@ class ChatsMethod {
     }
   }
 
-  Future<void> addToReceiverContacts(
-    String senderId,
-    String receiverId,
-    currentTime,
-  ) async {
+//add the contact to the receiver document
+  Future<void> _addToReceiverContacts(
+      String senderId, String receiverId, currentTime) async {
     DocumentSnapshot snaps =
         await getReceiverDocument(of: receiverId, forContact: senderId).get();
 
@@ -66,13 +66,16 @@ class ChatsMethod {
     }
   }
 
+  //add to contact for both sender and receiver
+
   _addToContacts({String? senderId, String? receiverId}) async {
     Timestamp currentTime = Timestamp.now();
 
-    await addToSenderContacts(senderId!, receiverId!, currentTime);
-    await addToReceiverContacts(senderId, receiverId, currentTime);
+    await _addToSenderContacts(senderId!, receiverId!, currentTime);
+    await _addToReceiverContacts(senderId, receiverId, currentTime);
   }
 
+//send chat message and add it to db
   Future<void> addMessageToDb2(ChatMessageModel2 message, ChatUserModel sender,
       ChatUserModel receiver, String fcm) async {
     log.w("receiver is ${receiver.toJson()}");
@@ -95,20 +98,17 @@ class ChatsMethod {
     await _addToContacts(
         senderId: sender.userId!, receiverId: receiver.userId!);
 
-    await notifyUser(
+    await _notifyUser(
         sender: sender.userName!, message: message.message!, to: fcm);
   }
 
-  notifyUser(
+  _notifyUser(
       {required String sender,
       required String message,
       required String to}) async {
     Map<String, dynamic> payload() => {
           "to": to,
-          "notification": {
-            "title": sender,
-            "body": message,
-          }
+          "notification": {"title": sender, "body": message}
         };
 
     await _services.sendPushNotification(payload());

@@ -13,7 +13,6 @@ import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state
 import 'package:go_rider/ui/features/dashboard/presentation/view/state_view.dart/my_error_state_view.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // ignore: must_be_immutable
@@ -43,23 +42,13 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
               icon: const Icon(Icons.arrow_back_ios)),
           iconTheme: const IconThemeData(color: AppColor.whiteColor),
           backgroundColor: AppColor.primaryColor,
-          title: Text(
-            'Detail',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColor.whiteColor),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 15.h),
-              child: SvgPicture.asset(
-                'assets/svgs/notification.svg',
-                height: 20.h,
-                width: 20.w,
-              ),
-            ),
-          ],
+          // title: Text(
+          //  // 'Detail',
+          //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          //       fontSize: 16,
+          //       fontWeight: FontWeight.w600,
+          //       color: AppColor.whiteColor),
+          // ),
         ),
         body: BlocListener<HomePageBloc, HomePageState>(
           listener: (context, state) {},
@@ -191,13 +180,6 @@ Widget _detailContainer(BuildContext context,
                       ),
                       onRatingUpdate: (rating) {},
                     ),
-                    // Text(
-                    //   '(234)',
-                    //   style: Theme.of(context)
-                    //       .textTheme
-                    //       .bodySmall!
-                    //       .copyWith(fontSize: 12, fontWeight: FontWeight.w500),
-                    // )
                   ],
                 ),
               ),

@@ -99,8 +99,10 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                                   ))
                             ],
                           ))
-                      : SizedBox(
+                      : Container(
                           width: 300,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
                           child: Column(
                             children: [
                               InkWell(

@@ -26,7 +26,7 @@ class RouteScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back_ios)),
         iconTheme: const IconThemeData(color: AppColor.whiteColor),
         title: Text(
-          'Route',
+          'Select Destination',
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -39,27 +39,33 @@ class RouteScreen extends StatelessWidget {
             padding: EdgeInsets.all(20.h),
             child: Column(
               children: [
-                AppTextField(
-                  hintText: 'Your Location',
-                  borderRadius: 25,
-                  controller: state.pickUpAddress,
-                  prefixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(width: 5.w),
-                      SvgPicture.asset('assets/svgs/from.svg'),
-                      SizedBox(width: 5.w),
-                      Text(
-                        'From: ',
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.greyColor),
-                      )
-                    ],
+                AbsorbPointer(
+                  absorbing: true,
+                  child: AppTextField(
+                    hintText: 'Your Location',
+                    borderRadius: 25,
+                    controller: state.pickUpAddress,
+                    prefixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(width: 15.w),
+                        SvgPicture.asset('assets/svgs/from.svg'),
+                        SizedBox(width: 5.w),
+                        Text(
+                          'From: ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColor.greyColor),
+                        )
+                      ],
+                    ),
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (p0) {},
                   ),
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (p0) {},
                 ),
                 SizedBox(height: 20.h),
                 InkWell(
@@ -74,7 +80,7 @@ class RouteScreen extends StatelessWidget {
                       prefixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(width: 5.w),
+                          SizedBox(width: 15.w),
                           SvgPicture.asset('assets/svgs/to.svg'),
                           SizedBox(width: 5.w),
                           Text(

@@ -23,10 +23,8 @@ class FirebaseRepository {
           {required Map<String, dynamic> payload, required String uid}) =>
       _firebaseMethod.bookRide(payload: payload, uid: uid);
 
-  Future<void> cancelRide({
-    required String uid,
-    required Map<String, dynamic> payload,
-  }) =>
+  Future<void> cancelRide(
+          {required String uid, required Map<String, dynamic> payload}) =>
       _firebaseMethod.cancelRide(uid: uid, payload: payload);
 
   Future<List<HistoryModel>> getRideHistory() =>
@@ -39,13 +37,9 @@ class FirebaseRepository {
   Future<String> updateProfilePhoto(File file) =>
       _firebaseMethod.updateProfilePhoto(file);
 
-  Future<void> updateProfile({
-    required Map<String, dynamic> payload,
-  }) =>
+  Future<void> updateProfile({required Map<String, dynamic> payload}) =>
       _firebaseMethod.updateProfile(payload: payload);
 
-  Future<void> storeFcmToken({
-    required Map<String, dynamic> payload,
-  }) =>
+  Future<void> storeFcmToken({required Map<String, dynamic> payload}) =>
       _firebaseMethod.storeFcmToken(payload: payload);
 }

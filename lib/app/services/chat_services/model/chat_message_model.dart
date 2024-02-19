@@ -18,25 +18,16 @@ class ChatMessageModel2 {
       this.message,
       this.photoUrl});
 
-  // ChatMessageModel2.imageMessage(
-  //     {this.isRead,
-  //     this.photoUrl,
-  //     this.timestamp,
-  //     this.senderId,
-  //     this.receiverId,
-  //     this.type,
-  //     this.message});
-
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
 
-    map['senderId'] = this.senderId;
-    map['receiverId'] = this.receiverId;
-    map['type'] = this.type;
-    map['message'] = this.message;
-    map['photoUrl'] = this.photoUrl;
-    map['isRead'] = this.isRead;
-    map['timestamp'] = this.timestamp;
+    map['senderId'] = senderId;
+    map['receiverId'] = receiverId;
+    map['type'] = type;
+    map['message'] = message;
+    map['photoUrl'] = photoUrl;
+    map['isRead'] = isRead;
+    map['timestamp'] = timestamp;
 
     return map;
   }
@@ -54,12 +45,12 @@ class ChatMessageModel2 {
   Map<String, dynamic> toImageMap() {
     var map = <String, dynamic>{};
     map['message'] = message;
-    map['senderId'] = this.senderId;
-    map['receiverId'] = this.receiverId;
-    map['type'] = this.type;
-    map['timestamp'] = this.timestamp;
-    map['isRead'] = this.isRead;
-    map['photoUrl'] = this.photoUrl;
+    map['senderId'] = senderId;
+    map['receiverId'] = receiverId;
+    map['type'] = type;
+    map['timestamp'] = timestamp;
+    map['isRead'] = isRead;
+    map['photoUrl'] = photoUrl;
     return map;
   }
 }

@@ -13,7 +13,9 @@ class NotificationServices {
       Map<String, dynamic> payload) async {
     Response response =
         await notificationRepoImplementation.sendPushNotification(payload);
+
     int statusCode = response.statusCode ?? 000;
+
     log.w('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDstatus: [INFO] ${response.statusCode}');
     log.w('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDdata: [INFO] ${response.data}');
 

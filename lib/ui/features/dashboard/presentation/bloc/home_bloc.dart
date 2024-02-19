@@ -47,6 +47,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   final FirebaseRepository _firebaseRepository = FirebaseRepository();
 
+  StreamSubscription<LocationData>? locationStream;
+
   HomePageBloc()
       : super(HomePageState(
           mapController: Completer<GoogleMapController>(),
@@ -98,6 +100,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     on<StoreFcmToken>((event, emit) async {
       await storeFcmToken();
     });
+
+    on<Logout>((event, emit) => reset(event.context));
   }
 
   @override
@@ -160,7 +164,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
       }
     }
 
-    _locationctr.onLocationChanged.listen((LocationData currentLocation) async {
+    locationStream = _locationctr.onLocationChanged
+        .listen((LocationData currentLocation) async {
       if (currentLocation.latitude != null &&
           currentLocation.longitude != null) {
         emit(state.copyWith(
@@ -458,10 +463,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     } else {}
   }
 
-  // calculateFare() async {
-  //   double distanceInMeters = await Geolocator
-  //       .distanceBetween(52.2165157, 6.9437819, 52.3546274, 4.8285838);
-
-  //       Geolocator.
-  // }
+  reset(BuildContext context) {
+    locationStream!.cancel();
+    FirebaseAuth.instance.signOut();
+    context.replace('/login');
+  }
 }

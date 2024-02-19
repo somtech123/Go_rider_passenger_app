@@ -69,3 +69,11 @@ class StoreFcmToken extends HomePageBlocEvent {
   @override
   List<Object?> get props => [];
 }
+
+class Logout extends HomePageBlocEvent {
+  BuildContext context;
+  Logout(this.context);
+
+  @override
+  List<Object?> get props => [context];
+}

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,9 +8,11 @@ import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc_event.dart';
 import 'package:go_rider/ui/features/chat/presentation/bloc/chat_bloc_state.dart';
 import 'package:go_rider/ui/features/chat/presentation/view/widget/chat_widgets.dart';
+import 'package:go_rider/ui/features/chat/presentation/view/widget/in_app_tutor.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/user_model.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // ignore: must_be_immutable
 class ViewLayout extends StatefulWidget {
@@ -21,6 +25,37 @@ class ViewLayout extends StatefulWidget {
 }
 
 class _ViewLayoutState extends State<ViewLayout> {
+  final addCategoryKey = GlobalKey();
+  TutorialCoachMark controller = TutorialCoachMark(targets: []);
+
+  late TutorialCoachMark ctr;
+
+  // void showInAppTour(BuildContext context, TutorialCoachMark controller) {
+  //   Future.delayed(const Duration(seconds: 2), () {
+  //     // StorageService().getSaveInAppTutor().then((value) {
+  //     //   if (value == false) {
+  //     controller.show(context: context);
+  //     // }
+  //     // });
+  //   });
+  // }
+
+  void initialize(BuildContext context, {required GlobalKey key}) {
+    ctr = TutorialCoachMark(
+      targets: inAppTutor(addCategoryKey: key),
+      colorShadow: AppColor.primaryColor,
+      paddingFocus: 10,
+      hideSkip: true,
+      opacityShadow: 0.8,
+      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+      onFinish: () {
+        log.w('completed');
+
+        // StorageService().saveInAppTutor();
+      },
+    )..show(context: context);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +66,8 @@ class _ViewLayoutState extends State<ViewLayout> {
             receiverId: widget.receiver.id!,
             receiver: receiver!,
             user: user!)));
+
+    initialize(context, key: addCategoryKey);
   }
 
   ChatUser? user;
@@ -49,6 +86,12 @@ class _ViewLayoutState extends State<ViewLayout> {
         firstName: widget.receiver.username);
 
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    ctr.finish();
+    super.dispose();
   }
 
   @override
@@ -73,8 +116,11 @@ class _ViewLayoutState extends State<ViewLayout> {
           ),
           actions: [
             IconButton(
+              key: addCategoryKey,
               onPressed: () {},
-              icon: const Icon(Icons.call),
+              icon: Icon(
+                Icons.call,
+              ),
             ),
           ],
         ),
@@ -103,7 +149,9 @@ class _ViewLayoutState extends State<ViewLayout> {
                     ),
                     messageOptions: MessageOptions(
                       showTime: true,
+                      showOtherUsersAvatar: true,
                       messagePadding: EdgeInsets.all(15.h),
+                      showCurrentUserAvatar: true,
                     ),
                     messageListOptions: const MessageListOptions(),
                   ),

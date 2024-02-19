@@ -99,12 +99,6 @@ class Api {
   }
 
   onErrorInterceptorHandler(DioError e, handler) async {
-    // if (e.response!.statusCode.toString().contains("401")) {
-    //   final prefs = StorageService();
-    //   await prefs.clearStorage();
-    //   g.Get.offAll(() => const OnBoardingScreen());
-    // }
-
     return handler.next(e); //continue
   }
 

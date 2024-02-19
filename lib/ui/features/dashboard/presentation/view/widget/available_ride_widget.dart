@@ -56,7 +56,7 @@ class _AvailableRideWidegetState extends State<AvailableRideWideget> {
                 child: AvailableRideContainer(
                   vehicleName: widget.rider[index].rideModel!,
                   vehiclePlate: widget.rider[index].ridePlate!,
-                  type: '${widget.rider[index].noOfSeat} Person Can Ride',
+                  type: '${widget.rider[index].noOfSeat} Seat Ride',
                   activeIndex: index,
                   currentIndex: currentIndex,
                   price:

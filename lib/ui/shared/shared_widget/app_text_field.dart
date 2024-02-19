@@ -52,6 +52,7 @@ class AppTextField extends StatelessWidget {
   final VoidCallback? onEdittingComplete;
   final void Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
+  final EdgeInsetsGeometry? contentPadding;
 
   const AppTextField({
     super.key,
@@ -83,6 +84,7 @@ class AppTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.ontap,
     this.onEdittingComplete,
+    this.contentPadding,
   });
 
   @override
@@ -110,7 +112,8 @@ class AppTextField extends StatelessWidget {
                 : errorMessage,
             counterText: "",
             errorStyle: const TextStyle(fontSize: 12),
-            contentPadding: EdgeInsets.fromLTRB(12.h, 20.h, 12.h, 20.h),
+            contentPadding:
+                contentPadding ?? EdgeInsets.fromLTRB(12.h, 20.h, 12.h, 20.h),
             hintStyle: hintStyle ??
                 Theme.of(context).textTheme.bodyLarge!.copyWith(
                     fontSize: 13,
