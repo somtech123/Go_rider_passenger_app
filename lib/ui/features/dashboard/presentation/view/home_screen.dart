@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: AppColor.primaryColor,
         title: Text(
-          AppStrings.home,
+          AppStrings.appName,
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w600,

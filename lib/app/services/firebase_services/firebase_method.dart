@@ -164,4 +164,17 @@ class FirebaseMethod {
       log.e(e);
     }
   }
+
+  Future<void> rateRider(
+      {required String riderId, required Map<String, dynamic> payload}) async {
+    try {
+      await _riderCollection
+          .doc(riderId)
+          .collection('rating')
+          .doc(riderId)
+          .set(payload, SetOptions(merge: false));
+    } catch (e) {
+      log.e(e);
+    }
+  }
 }

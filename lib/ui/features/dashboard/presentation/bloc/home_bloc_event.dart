@@ -60,14 +60,31 @@ class ViewActiveRide extends HomePageBlocEvent {
 
 class CancelRide extends HomePageBlocEvent {
   BuildContext context;
-  CancelRide({required this.context});
+  RiderModel riderModel;
+  CancelRide({required this.context, required this.riderModel});
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, riderModel];
 }
 
 class StoreFcmToken extends HomePageBlocEvent {
   @override
   List<Object?> get props => [];
+}
+
+class RateRider extends HomePageBlocEvent {
+  BuildContext context;
+  String riderId;
+  String rideFeedback;
+  double rating;
+
+  RateRider(
+      {required this.context,
+      required this.rating,
+      required this.riderId,
+      required this.rideFeedback});
+
+  @override
+  List<Object?> get props => [context, rating, riderId, rideFeedback];
 }
 
 class Logout extends HomePageBlocEvent {

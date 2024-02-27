@@ -77,6 +77,9 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                                       zoomControlsEnabled: true,
                                       zoomGesturesEnabled: true,
                                       trafficEnabled: true,
+                                      onCameraMove: (position) {
+                                        //  homeloc.add(MoveCameraPosition());
+                                      },
                                       initialCameraPosition: CameraPosition(
                                           zoom: 14,
                                           target: LatLng(
@@ -92,9 +95,74 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                                           state.polyline.values),
                                     ),
                                   ),
+                                  Positioned(
+                                      top: 10.h,
+                                      left: 50.w,
+                                      child: Visibility(
+                                        visible: state.bookingRideState ==
+                                            BookingState.inProgess,
+                                        child: Container(
+                                            width: 300.w,
+                                            height: 50.h,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.r),
+                                            ),
+                                            alignment: Alignment.topCenter,
+                                            padding: EdgeInsets.only(
+                                                top: 10.h,
+                                                left: 10.h,
+                                                right: 10.h),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'You are EnRoute',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .copyWith(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: AppColor
+                                                              .darkColor),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.of(context)
+                                                        .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ViewLayout(
+                                                        sender:
+                                                            state.userModel!,
+                                                        receiver:
+                                                            widget.riderModel,
+                                                      ),
+                                                    ));
+                                                  },
+                                                  child: CircleAvatar(
+                                                    backgroundColor:
+                                                        AppColor.primaryColor,
+                                                    radius: 20.r,
+                                                    child: SvgPicture.asset(
+                                                        'assets/svgs/chat.svg'),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      )),
                                   Visibility(
                                     visible: state.bookingRideState !=
                                         BookingState.cancelled,
+                                    //      &&
+                                    // state.bookingRideState ==
+                                    //     BookingState.inProgess,
                                     child: Positioned(
                                       bottom: 0,
                                       child: _detailContainer(context,
@@ -229,8 +297,8 @@ Widget _detailContainer(BuildContext context,
                           .add(BookRider(rider: riderModel));
                     }
                   : () {
-                      BlocProvider.of<HomePageBloc>(context)
-                          .add(CancelRide(context: context));
+                      BlocProvider.of<HomePageBloc>(context).add(
+                          CancelRide(context: context, riderModel: riderModel));
                     },
               label: state.bookingRideState == BookingState.initial
                   ? 'Start Ride'

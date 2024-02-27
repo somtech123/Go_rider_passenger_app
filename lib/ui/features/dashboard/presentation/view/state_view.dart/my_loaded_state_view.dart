@@ -12,11 +12,20 @@ import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class MyHomeScreenLoadedStateView extends StatelessWidget {
+class MyHomeScreenLoadedStateView extends StatefulWidget {
   const MyHomeScreenLoadedStateView({super.key});
 
   @override
+  State<MyHomeScreenLoadedStateView> createState() =>
+      _MyHomeScreenLoadedStateViewState();
+}
+
+class _MyHomeScreenLoadedStateViewState
+    extends State<MyHomeScreenLoadedStateView>
+    with AutomaticKeepAliveClientMixin<MyHomeScreenLoadedStateView> {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     var height = MediaQuery.of(context).size.height;
 
     final HomePageBloc homeloc = BlocProvider.of<HomePageBloc>(context);
@@ -46,7 +55,9 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
                         target: LatLng(state.currentLocation!.latitude,
                             state.currentLocation!.longitude)),
                     onMapCreated: (GoogleMapController controller) {
-                      state.mapController.complete(controller);
+                      if (!state.mapController.isCompleted) {
+                        state.mapController.complete(controller);
+                      }
                     },
                     markers: state.markers,
                     //  polylines: Set<Polyline>.of(state.polyline.values),
@@ -231,4 +242,7 @@ class MyHomeScreenLoadedStateView extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

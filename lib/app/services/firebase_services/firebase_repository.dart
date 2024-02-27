@@ -42,4 +42,8 @@ class FirebaseRepository {
 
   Future<void> storeFcmToken({required Map<String, dynamic> payload}) =>
       _firebaseMethod.storeFcmToken(payload: payload);
+
+  Future<void> rateRider(
+          {required Map<String, dynamic> payload, required String riderId}) =>
+      _firebaseMethod.rateRider(riderId: riderId, payload: payload);
 }

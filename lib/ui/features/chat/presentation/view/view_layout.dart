@@ -118,7 +118,7 @@ class _ViewLayoutState extends State<ViewLayout> {
             IconButton(
               key: addCategoryKey,
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.call,
               ),
             ),

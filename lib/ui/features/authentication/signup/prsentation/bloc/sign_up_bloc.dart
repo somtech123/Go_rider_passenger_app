@@ -103,6 +103,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       'id': uid,
       'email': email,
       "dateCreated": DateTime.now().toIso8601String(),
+      'profileImage': '',
     });
   }
 }

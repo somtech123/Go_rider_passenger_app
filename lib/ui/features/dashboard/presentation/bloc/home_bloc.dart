@@ -17,6 +17,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
+import 'package:go_rider/ui/features/dashboard/presentation/view/widget/rating_screen.dart';
 import 'package:go_rider/ui/shared/shared_widget/custom_snackbar.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/utils/utils.dart';
@@ -92,7 +93,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     });
 
     on<CancelRide>((event, emit) async {
-      cancelRide(event.context);
+      cancelRide(event.context, riderModel: event.riderModel);
     });
 
     on<ViewActiveRide>((event, emit) => viewCurrentRide(event.context));
@@ -102,6 +103,13 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     });
 
     on<Logout>((event, emit) => reset(event.context));
+
+    on<RateRider>((event, emit) async {
+      await rateRide(event.context,
+          rideFeedback: event.rideFeedback,
+          id: event.riderId,
+          rating: event.rating);
+    });
   }
 
   @override
@@ -214,6 +222,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   _updateMarker(LatLng position) {
+    state.markers.retainWhere((e) => e.markerId == 'current_location');
+
     Marker currentpositionMarker = Marker(
         markerId: const MarkerId('current_location'),
         position: LatLng(position.latitude, position.longitude));
@@ -434,7 +444,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     context.push('/rideDetail', extra: state.currentRider);
   }
 
-  cancelRide(BuildContext context) async {
+  cancelRide(BuildContext context, {required RiderModel riderModel}) async {
     await _firebaseRepository
         .cancelRide(uid: state.uid!, payload: {'rideStatus': 'cancel'});
 
@@ -450,7 +460,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
         destinationLocation: null,
         markers: markers,
         currentRider: null));
-    Navigator.of(context).pop();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => RatingSceen(riderModel: riderModel),
+    ));
   }
 
   storeFcmToken() async {
@@ -461,6 +473,25 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     if (token != null) {
       await _firebaseRepository.storeFcmToken(payload: {'fcmToken': token});
     } else {}
+  }
+
+  rateRide(BuildContext context,
+      {required String rideFeedback,
+      required String id,
+      required double rating}) async {
+    if (rating != null) {
+      Map<String, dynamic> payload() => {
+            'rating': rating,
+            'feedback': rideFeedback,
+            "dateCreated": DateTime.now().toIso8601String(),
+          };
+
+      await _firebaseRepository.rateRider(payload: payload(), riderId: id);
+
+      context.replace('/homePage');
+    } else {
+      showCustomSnackBar(message: 'rider rating is empty');
+    }
   }
 
   reset(BuildContext context) {
