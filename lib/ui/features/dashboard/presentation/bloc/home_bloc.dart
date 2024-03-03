@@ -2,6 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:google_maps_flutter_platform_interface/src/types/marker_updates.dart'
+    as m;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,8 +74,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
       await getUserDetail();
     });
 
-    on<SelectPickUpLocation>((event, emit) async {
-      selectPickUpLocation(event.context);
+    on<SelectDestinationLocation>((event, emit) async {
+      selectDestinationLocation(event.context);
     });
 
     on<MoveCameraPosition>((event, emit) {
@@ -115,6 +117,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   @override
   Future<void> close() {
     state.mapController = Completer();
+
+    state.destinationAddress.dispose();
+    state.pickUpAddress.dispose();
     return super.close();
   }
 
@@ -128,6 +133,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     _cameraToPosition(LatLng(
         state.currentLocation!.latitude, state.currentLocation!.longitude));
   }
+
+  //Get user detail from firebase
 
   getUserDetail() async {
     emit(state.copyWith(
@@ -152,6 +159,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           loadingState: LoadingState.error, userModel: UserModel()));
     }
   }
+
+  //Get live location of user
 
   getLocationUpdate() async {
     bool serviceEnabled;
@@ -222,7 +231,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   _updateMarker(LatLng position) {
-    state.markers.retainWhere((e) => e.markerId == 'current_location');
+    //  state.markers.retainWhere((e) => e.markerId == 'destination');
 
     Marker currentpositionMarker = Marker(
         markerId: const MarkerId('current_location'),
@@ -235,7 +244,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     emit(state.copyWith(markers: markers));
   }
 
-  Future<List<LatLng>> getPolyPointCordinate(LatLng destination) async {
+  Future<List<LatLng>> _getPolyPointCordinate(LatLng destination) async {
     emit(state.copyWith(plineCoordinate: []));
 
     List<LatLng> plineCoordinate = state.plineCoordinate;
@@ -264,7 +273,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     return plineCoordinate;
   }
 
-  generatePolyLine(List<LatLng> plineCoordinate) async {
+  _generatePolyLine(List<LatLng> plineCoordinate) async {
     PolylineId id = const PolylineId('direction_point');
 
     Polyline polyline = Polyline(
@@ -294,15 +303,12 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     log.w(riderLocation);
 
     if (riderLocation.lattitude != null) {
-      log.w(riderLocation.lattitude);
-      log.w(riderLocation.longitude);
+      await _getETA(LatLng(riderLocation.lattitude!, riderLocation.longitude!),
+          state.currentLocation!);
 
-      // await getETA(state.currentLocation!,
-      //     LatLng(riderLocation.lattitude!, riderLocation.longitude!));
-
-      getPolyPointCordinate(LatLng(state.destinationLocation!.latitude,
+      _getPolyPointCordinate(LatLng(state.destinationLocation!.latitude,
               state.destinationLocation!.longitude))
-          .then((value) => generatePolyLine(value));
+          .then((value) => _generatePolyLine(value));
 
       emit(state.copyWith(
           riderLocation: riderLocation,
@@ -313,7 +319,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
     }
   }
 
-  Future<void> selectPickUpLocation(BuildContext context) async {
+  //Select destination address
+
+  Future<void> selectDestinationLocation(BuildContext context) async {
     await autoComplete(context).then((value) => getRider());
   }
 
@@ -343,6 +351,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
       mapServices.PlacesDetailsResponse detail =
           await places.getDetailsByPlaceId(prediction.placeId!);
+
       if (detail.status == 'OK') {
         double latitude = detail.result.geometry!.location.lat;
         double longitude = detail.result.geometry!.location.lng;
@@ -354,6 +363,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
                 BitmapDescriptor.hueBlue));
 
         Set<Marker> markers = state.markers;
+        //     List<Marker> updatedMarkers =[];
+
+        //  m.MarkerUpdates.from(
+        //         Set<Marker>.from(markers), Set<Marker>.from(updatedMarkers));
 
         markers.add(currentLocationMarker);
 
@@ -362,26 +375,25 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           destinationLocation: LatLng(latitude, longitude),
           bookingRideState: BookingState.initial,
         ));
+
+        log.w(markers.length);
       }
     }
   }
 
-  Future<int> getETA(LatLng start, LatLng end) async {
+  //return the duration in min between two LatLng coordinates
+
+  Future<int> _getETA(LatLng start, LatLng end) async {
     emit(state.copyWith(
         arrivingTimeState: LoadingState.loading, arivalDuration: 0));
 
     final response = await http.get(Uri.parse(
-      'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=${dotenv.env['GOOGLE_MAP_API_KEY']}',
-    ));
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=${dotenv.env['GOOGLE_MAP_API_KEY']}'));
 
     if (response.statusCode == 200) {
       final decodedResponse = json.decode(response.body);
 
-      log.w(decodedResponse);
-
       final routes = decodedResponse['routes'] as List<dynamic>;
-
-      log.w(routes);
 
       final durationInSeconds =
           routes[0]['legs'][0]['duration']['value'] as int;
@@ -415,8 +427,6 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
     String address =
         '${placemarks[0].street} ${placemarks[0].subAdministrativeArea}, ${placemarks[0].administrativeArea}';
-
-    log.w(address);
 
     Map<String, dynamic> payload() => {
           'rideId': Utils.generateRideRefrence(),

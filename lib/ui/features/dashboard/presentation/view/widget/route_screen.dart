@@ -70,7 +70,7 @@ class RouteScreen extends StatelessWidget {
                 SizedBox(height: 20.h),
                 InkWell(
                   onTap: () {
-                    homeloc.add(SelectPickUpLocation(context: context));
+                    homeloc.add(SelectDestinationLocation(context: context));
                   },
                   child: AbsorbPointer(
                     absorbing: true,

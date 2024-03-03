@@ -13,6 +13,7 @@ import 'package:go_rider/ui/features/dashboard/presentation/bloc/home_bloc_state
 import 'package:go_rider/ui/features/dashboard/presentation/view/state_view.dart/my_error_state_view.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
+import 'package:go_rider/utils/app_constant/app_string.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // ignore: must_be_immutable
@@ -77,19 +78,19 @@ class _RideDetailScreenState extends State<RideDetailScreen> {
                                       zoomControlsEnabled: true,
                                       zoomGesturesEnabled: true,
                                       trafficEnabled: true,
-                                      onCameraMove: (position) {
-                                        //  homeloc.add(MoveCameraPosition());
-                                      },
                                       initialCameraPosition: CameraPosition(
-                                          zoom: 14,
+                                          zoom: 12,
                                           target: LatLng(
                                               state.currentLocation!.latitude,
                                               state
                                                   .currentLocation!.longitude)),
                                       onMapCreated:
-                                          (GoogleMapController controller) =>
-                                              state.mapController
-                                                  .complete(controller),
+                                          (GoogleMapController controller) {
+                                        if (!state.mapController.isCompleted) {
+                                          state.mapController
+                                              .complete(controller);
+                                        }
+                                      },
                                       markers: state.markers,
                                       polylines: Set<Polyline>.of(
                                           state.polyline.values),
@@ -183,7 +184,7 @@ Widget _detailContainer(BuildContext context,
   return BlocBuilder<HomePageBloc, HomePageState>(
     builder: (context, state) {
       return Container(
-        height: 300.h,
+        height: 280.h,
         padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 15.h),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -208,7 +209,11 @@ Widget _detailContainer(BuildContext context,
               height: 70.h,
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(radius: 30.r),
+                leading: CircleAvatar(
+                  radius: 30.r,
+                  backgroundImage: NetworkImage(riderModel.profileImage ??
+                      AppStrings.dummyProfilePicture),
+                ),
                 trailing: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -252,13 +257,13 @@ Widget _detailContainer(BuildContext context,
                 ),
               ),
             ),
-            SizedBox(height: 25.h),
+            SizedBox(height: 10.h),
             SizedBox(
               height: 30.h,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(riderModel.rideModel!,
+                  Text(riderModel.rideModel!.toUpperCase(),
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
@@ -276,12 +281,12 @@ Widget _detailContainer(BuildContext context,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(riderModel.phoneNumber!,
+                  Text(riderModel.ridePlate!.toUpperCase(),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
                           color: AppColor.darkColor)),
-                  Text('Arriving in',
+                  Text('${state.arivalDuration} Min',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,

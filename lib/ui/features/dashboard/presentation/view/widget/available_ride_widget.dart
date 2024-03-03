@@ -129,7 +129,7 @@ class AvailableRideContainer extends StatelessWidget {
           ),
           SizedBox(height: 5.h),
           Text(
-            vehiclePlate,
+            vehiclePlate.toUpperCase(),
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontSize: 14,
                 color: activeIndex == currentIndex

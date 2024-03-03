@@ -39,8 +39,11 @@ class HomePageState {
   TextEditingController destinationAddress;
 
   bool onCameraMove;
+
   LocationModel? riderLocation;
+
   List<RiderModel>? rider;
+
   RiderModel? currentRider;
 
   String? uid;
@@ -84,7 +87,7 @@ class HomePageState {
     bool? onCameraMove,
     LoadingState? arrivingTimeState,
     int? arivalDuration,
-    BookingState? bookingRideState,
+   BookingState? bookingRideState,
     String? uid,
     RiderModel? currentRider,
   }) =>

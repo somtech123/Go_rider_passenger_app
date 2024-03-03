@@ -16,10 +16,10 @@ class GetUserDetails extends HomePageBlocEvent {
   List<Object?> get props => [];
 }
 
-class SelectPickUpLocation extends HomePageBlocEvent {
+class SelectDestinationLocation extends HomePageBlocEvent {
   final BuildContext context;
 
-  SelectPickUpLocation({required this.context});
+  SelectDestinationLocation({required this.context});
 
   @override
   List<Object?> get props => [context];

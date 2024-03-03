@@ -67,7 +67,7 @@ class _ViewLayoutState extends State<ViewLayout> {
             receiver: receiver!,
             user: user!)));
 
-    initialize(context, key: addCategoryKey);
+    //initialize(context, key: addCategoryKey);
   }
 
   ChatUser? user;
