@@ -20,19 +20,27 @@ class FirebaseRepository {
       _firebaseMethod.getLocation(riderId);
 
   Future<void> bookRide(
-          {required Map<String, dynamic> payload, required String uid}) =>
-      _firebaseMethod.bookRide(payload: payload, uid: uid);
+          {required Map<String, dynamic> payload,
+          required String uid,
+          required String rider,
+          required String fcm}) =>
+      _firebaseMethod.bookRide(
+          payload: payload, uid: uid, fcm: fcm, rider: rider);
 
   Future<void> cancelRide(
-          {required String uid, required Map<String, dynamic> payload}) =>
-      _firebaseMethod.cancelRide(uid: uid, payload: payload);
+          {required String uid,
+          required Map<String, dynamic> payload,
+          required String rider,
+          required String fcm}) =>
+      _firebaseMethod.cancelRide(
+          uid: uid, payload: payload, fcm: fcm, rider: rider);
 
   Future<List<HistoryModel>> getRideHistory() =>
       _firebaseMethod.getRideHistory();
 
-  Future<void> getFirebaaseuser(
+  Future<void> getFirebaseUser(
           {required String collection, required String uid}) =>
-      _firebaseMethod.getFirebaaseuser(collection: collection, uid: uid);
+      _firebaseMethod.getFirebaseUser(collection: collection, uid: uid);
 
   Future<String> updateProfilePhoto(File file) =>
       _firebaseMethod.updateProfilePhoto(file);

@@ -82,7 +82,7 @@ class ChatsMethod {
 
     var map = message.toMap();
 
-    await _firebaseRepository.getFirebaaseuser(
+    await _firebaseRepository.getFirebaseUser(
         collection: 'rider', uid: receiver.userId!);
 
     await _messageCollection

@@ -1,9 +1,7 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member, use_build_context_synchronously, unnecessary_null_comparison, depend_on_referenced_packages, library_prefixes
+// ignore_for_file: invalid_use_of_visible_for_testing_member, use_build_context_synchronously, unnecessary_null_comparison, depend_on_referenced_packages, library_prefixes, prefer_collection_literals
 
 import 'dart:async';
 import 'dart:convert';
-import 'package:google_maps_flutter_platform_interface/src/types/marker_updates.dart'
-    as m;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -231,8 +229,6 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   _updateMarker(LatLng position) {
-    //  state.markers.retainWhere((e) => e.markerId == 'destination');
-
     Marker currentpositionMarker = Marker(
         markerId: const MarkerId('current_location'),
         position: LatLng(position.latitude, position.longitude));
@@ -363,12 +359,8 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
                 BitmapDescriptor.hueBlue));
 
         Set<Marker> markers = state.markers;
-        //     List<Marker> updatedMarkers =[];
-
-        //  m.MarkerUpdates.from(
-        //         Set<Marker>.from(markers), Set<Marker>.from(updatedMarkers));
-
-        markers.add(currentLocationMarker);
+        markers = Set.of([currentLocationMarker]);
+        //     markers.add(currentLocationMarker);
 
         emit(state.copyWith(
           markers: markers,
@@ -378,7 +370,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
         log.w(markers.length);
       }
-    }
+    } else {}
   }
 
   //return the duration in min between two LatLng coordinates
@@ -399,11 +391,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           routes[0]['legs'][0]['duration']['value'] as int;
 
       final durationInMinutes = (durationInSeconds / 60).ceil();
+
       emit(state.copyWith(
           arrivingTimeState: LoadingState.loaded,
           arivalDuration: durationInMinutes));
-
-      log.w(durationInMinutes);
 
       return durationInMinutes;
     } else {
@@ -442,7 +433,11 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           'dateCreated': DateTime.now().toIso8601String(),
         };
 
-    await _firebaseRepository.bookRide(payload: payload(), uid: uid);
+    await _firebaseRepository.bookRide(
+        payload: payload(),
+        uid: uid,
+        rider: rider.username!,
+        fcm: state.userModel!.fcmToken!);
 
     emit(state.copyWith(bookingRideState: BookingState.inProgess));
   }
@@ -455,8 +450,11 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   cancelRide(BuildContext context, {required RiderModel riderModel}) async {
-    await _firebaseRepository
-        .cancelRide(uid: state.uid!, payload: {'rideStatus': 'cancel'});
+    await _firebaseRepository.cancelRide(
+        uid: state.uid!,
+        payload: {'rideStatus': 'cancel'},
+        rider: riderModel.username!,
+        fcm: state.userModel!.fcmToken!);
 
     showCustomSnackBar(message: 'you have cancelled this ride');
 

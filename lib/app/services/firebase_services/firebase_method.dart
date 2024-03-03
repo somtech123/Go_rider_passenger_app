@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/app/services/notification/notification_repo_implementation.dart';
+import 'package:go_rider/app/services/notification/usecase.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/history/data/history_model.dart';
@@ -11,6 +13,8 @@ import 'package:go_rider/ui/features/history/data/history_model.dart';
 var log = getLogger('Firebase_method');
 
 class FirebaseMethod {
+  final NotificationServices _services =
+      NotificationServices(NotificationRepoImplementation());
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -24,31 +28,55 @@ class FirebaseMethod {
       _firestore.collection('rider');
 
   Future<void> bookRide(
-      {required Map<String, dynamic> payload, required String uid}) async {
+      {required Map<String, dynamic> payload,
+      required String uid,
+      required String rider,
+      required String fcm}) async {
     try {
       await _userCollection
           .doc(_auth.currentUser!.uid)
           .collection('ride')
           .doc(uid)
           .set(payload, SetOptions(merge: false));
+      await _notifyUser(
+          sender: _auth.currentUser!.displayName!,
+          message: 'you booked a ride with $rider',
+          to: fcm);
     } catch (e) {
       log.e(e);
     }
   }
 
-  Future<void> cancelRide({
-    required String uid,
-    required Map<String, dynamic> payload,
-  }) async {
+  Future<void> cancelRide(
+      {required String uid,
+      required Map<String, dynamic> payload,
+      required String rider,
+      required String fcm}) async {
     try {
       _userCollection
           .doc(_auth.currentUser!.uid)
           .collection('ride')
           .doc(uid)
           .update(payload);
+      await _notifyUser(
+          sender: _auth.currentUser!.displayName!,
+          message: 'your ride with $rider has been cancelled',
+          to: fcm);
     } catch (e) {
       log.e(e);
     }
+  }
+
+  _notifyUser(
+      {required String sender,
+      required String message,
+      required String to}) async {
+    Map<String, dynamic> payload() => {
+          "to": to,
+          "notification": {"title": sender, "body": message}
+        };
+
+    await _services.sendPushNotification(payload());
   }
 
   Future<void> addUserLocation(
@@ -117,7 +145,7 @@ class FirebaseMethod {
     return data;
   }
 
-  Future<void> getFirebaaseuser(
+  Future<void> getFirebaseUser(
       {required String collection, required String uid}) async {
     try {
       await _firestore.collection(collection).doc(uid).get();

@@ -47,9 +47,10 @@ class _MyHomeScreenLoadedStateViewState
                   child: GoogleMap(
                     mapType: MapType.normal,
                     myLocationButtonEnabled: true,
-                    zoomControlsEnabled: true,
+                    zoomControlsEnabled: false,
                     zoomGesturesEnabled: true,
                     trafficEnabled: true,
+
                     initialCameraPosition: CameraPosition(
                         zoom: 14,
                         target: LatLng(state.currentLocation!.latitude,
@@ -121,9 +122,6 @@ class _MyHomeScreenLoadedStateViewState
                                 child: CupertinoFormSection.insetGrouped(
                                   margin: EdgeInsets.zero,
                                   clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(22),
-                                  ),
                                   children: [
                                     AbsorbPointer(
                                       absorbing: true,
@@ -229,7 +227,6 @@ class _MyHomeScreenLoadedStateViewState
                 ),
                 Visibility(
                   visible: state.rider!.isNotEmpty,
-                  // destinationAddress.text.isNotEmpty,
                   child: Positioned(
                     bottom: 30.0.h,
                     child: AvailableRideWideget(rider: state.rider!),

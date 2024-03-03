@@ -50,7 +50,8 @@ class AppRouter {
           }),
       GoRoute(
           path: '/historyPage',
-          builder: (context, state) => const HistoryScreen()),
+          pageBuilder: (context, state) => CustomSizeTransition(
+              key: state.pageKey, child: const HistoryScreen())),
       GoRoute(
           path: '/chatPage', builder: (context, state) => const ChatScreen()),
     ],
