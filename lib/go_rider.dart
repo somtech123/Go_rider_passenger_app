@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,7 +35,7 @@ class _GoRiderState extends State<GoRider> {
     ///gives you the message on which user taps
     ///and it opened the app from terminated state
     ///
-    
+
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         final routeFromMessage = message.data["route"];
@@ -48,6 +49,8 @@ class _GoRiderState extends State<GoRider> {
       if (message.notification != null) {
         log.w(message.notification!.body);
         log.w(message.notification!.title);
+
+        FlutterAppBadger.updateBadgeCount(1);
       }
 
       NotificationService().showNotification(
@@ -56,6 +59,8 @@ class _GoRiderState extends State<GoRider> {
     });
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       final routeFromMessage = message.data["route"];
+
+      FlutterAppBadger.removeBadge();
 
       context.goNamed(routeFromMessage);
     });

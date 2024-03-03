@@ -46,6 +46,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   uuid: 
   flutter_timezone: ^1.0.7
+  flutter_app_badger: ^1.5.0
    
 
 dependency_overrides:

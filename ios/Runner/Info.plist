@@ -61,6 +61,11 @@
 
 	<string>NSMicrophoneUsageDescription</string>
 	<key>needs access to the microphone</key>
+	
+	<key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+    </array>
 
 </dict>
 </plist>
