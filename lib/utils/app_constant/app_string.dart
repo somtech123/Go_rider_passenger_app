@@ -2,6 +2,7 @@ class AppStrings {
   static const String appName = 'Go Rider';
   static const String home = 'Home';
   static const String enterEmail = 'Enter Your Email';
+  static const String resetPwd = 'Enter Your Email to send reset password link';
 
   static String dummyProfilePicture =
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";

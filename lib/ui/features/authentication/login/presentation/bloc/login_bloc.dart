@@ -54,4 +54,12 @@ class LoginBloc extends Bloc<LoginEvenet, LoginState> {
       showCustomSnackBar(message: e.toString());
     }
   }
+
+  forgottenPassword(BuildContext context, {required String email}) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+
+      //await _auth.confirmPasswordReset(code: code, newPassword: newPassword)
+    } catch (e) {}
+  }
 }

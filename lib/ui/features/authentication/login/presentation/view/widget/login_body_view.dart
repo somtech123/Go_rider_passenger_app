@@ -154,6 +154,7 @@ class _LoginBodyViewState extends State<LoginBodyView> {
                     Align(
                       alignment: Alignment.topRight,
                       child: InkWell(
+                        onTap: () => context.push('/passwordReset'),
                         child: Text(
                           AppStrings.forgetPassword,
                           style:

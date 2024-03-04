@@ -2,6 +2,7 @@ import 'package:go_rider/app/resouces/app_transition.dart';
 import 'package:go_rider/app/resouces/navigation_services.dart';
 import 'package:go_rider/ui/features/account/presentation/view/account.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/view/login_screen.dart';
+import 'package:go_rider/ui/features/authentication/reset_password/presntation/view/forgotten_password_screen.dart';
 import 'package:go_rider/ui/features/authentication/signup/prsentation/view/sign_up_screen.dart';
 import 'package:go_rider/ui/features/chat/presentation/view/chat_screen.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
@@ -27,9 +28,11 @@ class AppRouter {
               child: const HomeScreen(), key: state.pageKey)),
       GoRoute(
         path: '/signUp',
-        pageBuilder: (context, state) => CustomSlideTransition(
-            key: state.pageKey, child: const SignUpScreen()),
+        builder: (context, state) => const SignUpScreen(),
       ),
+      GoRoute(
+          path: '/passwordReset',
+          builder: (context, state) => const ForgottenPasswordScreen()),
       GoRoute(
         path: '/account',
         pageBuilder: (context, state) => CustomSlideTransition(
