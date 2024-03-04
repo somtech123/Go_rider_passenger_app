@@ -21,10 +21,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
             loadingState: LoadingState.initial,
             isVisible: true)) {
     on<SignUp>((event, emit) async {
-      await signup(event.context,
-          email: event.email,
-          password: event.password,
-          username: event.username);
+      await signup(
+        event.context,
+        email: event.email,
+        password: event.password,
+        username: event.username,
+        phone: event.phone,
+      );
     });
 
     on<ObsureText>((event, emit) => obsureText());
@@ -37,12 +40,11 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> signup(
-    BuildContext context, {
-    required String email,
-    required String password,
-    required String username,
-  }) async {
+  Future<void> signup(BuildContext context,
+      {required String email,
+      required String password,
+      required String username,
+      required String phone}) async {
     EasyLoading.show(status: 'loading...');
 
     emit(state.copyWith(loadingState: LoadingState.loading, signUpMessage: ''));
@@ -52,11 +54,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      log.wtf(
-          "Successfully created auth ${cred.user!.uid}  started creation of firestore acct. . .");
-
       await _createFireStoreUser(
-          uid: cred.user!.uid, username: username, email: email);
+          uid: cred.user!.uid, username: username, email: email, phone: phone);
+
+      await _auth.currentUser!.updateDisplayName(username);
 
       emit(state.copyWith(
           loadingState: LoadingState.loaded, signUpMessage: 'success'));
@@ -97,13 +98,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   Future<void> _createFireStoreUser(
       {required String uid,
       required String username,
-      required String email}) async {
+      required String email,
+      required String phone}) async {
     await _firestore.collection("users").doc(uid).set({
       "userName": username,
       'id': uid,
       'email': email,
       "dateCreated": DateTime.now().toIso8601String(),
       'profileImage': '',
+      'phone': phone
     });
   }
 }

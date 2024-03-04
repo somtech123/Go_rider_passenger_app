@@ -39,7 +39,7 @@ class FullTopBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   SizedBox(width: 10.h),
                   Padding(
-                    padding: EdgeInsets.only(top: 25.h),
+                    padding: EdgeInsets.only(top: 30.h),
                     child: title!,
                   )
                 ],

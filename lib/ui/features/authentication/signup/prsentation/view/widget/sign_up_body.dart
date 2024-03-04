@@ -39,6 +39,8 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
+  TextEditingController phoneCtr = TextEditingController();
+
   final alphaRegex = RegExp(r'[a-zA-Z]');
 
   @override
@@ -58,6 +60,7 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
     passwordController.dispose();
     userNameController.dispose();
     emailController.dispose();
+    phoneCtr.dispose();
     super.dispose();
   }
 
@@ -77,7 +80,6 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 50.h),
                     Text(
                       AppStrings.fullName,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -97,6 +99,35 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]"))
                       ],
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return 'This Field is required';
+                        }
+                        return null;
+                      },
+                      onFieldSubmitted: (p0) {
+                        FocusScope.of(context).unfocus();
+                      },
+                      textInputAction: TextInputAction.next,
+                    ),
+                    SizedBox(height: 20.h),
+                    Text(
+                      'Phone Number',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.darkColor),
+                    ),
+                    SizedBox(height: 10.h),
+                    AppTextField(
+                      hintText: 'Phone Number',
+                      controller: phoneCtr,
+                      enableInteractiveSelection: false,
+                      maxLength: 11,
+                      prefixIcon: Platform.isIOS
+                          ? const Icon(CupertinoIcons.phone)
+                          : const Icon(Icons.phone),
+                      keyboardType: TextInputType.phone,
                       validator: (val) {
                         if (val == null || val.isEmpty) {
                           return 'This Field is required';
@@ -192,10 +223,12 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
                               .invokeMethod('TextInput.hide');
 
                           signupBloc.add(SignUp(
-                              context: context,
-                              email: emailController.text,
-                              password: passwordController.text,
-                              username: userNameController.text));
+                            context: context,
+                            email: emailController.text.trim(),
+                            password: passwordController.text.trim(),
+                            username: userNameController.text.trim(),
+                            phone: phoneCtr.text.trim(),
+                          ));
                         }
                       },
                       label: AppStrings.siginup,
@@ -255,7 +288,7 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       log.w('navigate to login screen');
-                                      context.replace('/login');
+                                      context.go('/login');
                                     },
                                   style: Theme.of(context)
                                       .textTheme

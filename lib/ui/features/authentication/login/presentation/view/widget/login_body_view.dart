@@ -153,19 +153,35 @@ class _LoginBodyViewState extends State<LoginBodyView> {
                     SizedBox(height: 10.h),
                     Align(
                       alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () => context.push('/passwordReset'),
-                        child: Text(
-                          AppStrings.forgetPassword,
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                      child: RichText(
+                          text: TextSpan(
+                              text: AppStrings.forgetPassword,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w500,
                                     color: AppColor.greyColor,
+                                  ),
+                              children: [
+                            TextSpan(
+                              text: ' Reset',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  context.push('/passwordReset');
+                                },
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColor.primaryColor,
                                     decoration: TextDecoration.underline,
                                   ),
-                        ),
-                      ),
+                            )
+                          ])),
                     ),
                     SizedBox(height: 20.h),
                     PrimaryButton(
@@ -247,6 +263,7 @@ class _LoginBodyViewState extends State<LoginBodyView> {
                                         fontSize: 17,
                                         fontWeight: FontWeight.w500,
                                         color: AppColor.primaryColor,
+                                        decoration: TextDecoration.underline,
                                       ))
                             ]),
                       ),

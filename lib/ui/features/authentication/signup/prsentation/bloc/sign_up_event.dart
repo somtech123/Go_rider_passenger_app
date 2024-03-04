@@ -7,15 +7,16 @@ abstract class SignUpEvent extends Equatable {}
 class SignUp extends SignUpEvent {
   final String email;
   final String password;
-  final String username;
+  final String username, phone;
   BuildContext context;
   SignUp(
       {required this.email,
       required this.password,
       required this.username,
+      required this.phone,
       required this.context});
   @override
-  List<Object?> get props => [email, password, username, context];
+  List<Object?> get props => [email, password, username, context, phone];
 }
 
 class ObsureText extends SignUpEvent {
