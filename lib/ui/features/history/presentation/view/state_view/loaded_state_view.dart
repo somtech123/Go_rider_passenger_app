@@ -13,36 +13,46 @@ class HistoryLoadedStateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 15.h, right: 15.h, top: 15.h),
-          child: Text(
-            'Showing Ride History',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: AppColor.darkColor),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) => _historyCard(
-              context,
-              destination: data[index].destination!,
-              pickUp: data[index].pickUpLocation!,
-              price: data[index].amount!,
-              date: data[index].dateCreated!,
+    return data.isEmpty
+        ? Center(
+            child: Text(
+              'ride history would appear here',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: AppColor.darkColor),
             ),
-            itemCount: data.length,
-          ),
-        )
-      ],
-    );
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 15.h, right: 15.h, top: 15.h),
+                child: Text(
+                  'Showing Ride History',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColor.darkColor),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => _historyCard(
+                    context,
+                    destination: data[index].destination!,
+                    pickUp: data[index].pickUpLocation!,
+                    price: data[index].amount!,
+                    date: data[index].dateCreated!,
+                  ),
+                  itemCount: data.length,
+                ),
+              )
+            ],
+          );
   }
 }
 

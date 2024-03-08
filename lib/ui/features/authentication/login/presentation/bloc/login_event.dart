@@ -1,9 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 abstract class LoginEvenet extends Equatable {}
 
-// ignore: must_be_immutable
 class Login extends LoginEvenet {
   final String email;
   final String password;
@@ -18,4 +19,13 @@ class Login extends LoginEvenet {
 class ObsureText extends LoginEvenet {
   @override
   List<Object?> get props => [];
+}
+
+class ResetPassword extends LoginEvenet {
+  final String email;
+  BuildContext context;
+  ResetPassword({required this.email, required this.context});
+
+  @override
+  List<Object?> get props => [email, context];
 }

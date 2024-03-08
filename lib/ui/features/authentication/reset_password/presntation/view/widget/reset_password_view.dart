@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_bloc.dart';
+import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_event.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_state.dart';
 import 'package:go_rider/ui/shared/shared_widget/app_text_field.dart';
 import 'package:go_rider/ui/shared/shared_widget/primary_button.dart';
@@ -83,10 +84,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       if (formKey.currentState!.validate()) {
                         SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-                        //   loginBloc.add(Login(
-                        //       context: context,
-                        //       email: emailController.text.trim(),
-                        //       password: passwordController.text.trim()));
+                        loginBloc.add(ResetPassword(
+                            context: context,
+                            email: emailController.text.trim()));
                       }
                     },
                     label: 'Reset Password',

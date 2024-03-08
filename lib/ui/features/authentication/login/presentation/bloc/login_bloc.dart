@@ -20,6 +20,10 @@ class LoginBloc extends Bloc<LoginEvenet, LoginState> {
     });
 
     on<ObsureText>((event, emit) => obsureText());
+
+    on<ResetPassword>((event, emit) async {
+      await forgottenPassword(event.context, email: event.email);
+    });
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -57,9 +61,29 @@ class LoginBloc extends Bloc<LoginEvenet, LoginState> {
 
   forgottenPassword(BuildContext context, {required String email}) async {
     try {
+      EasyLoading.show(status: 'loading...');
+
       await _auth.sendPasswordResetEmail(email: email);
 
-      //await _auth.confirmPasswordReset(code: code, newPassword: newPassword)
-    } catch (e) {}
+      EasyLoading.dismiss();
+
+      showCustomSnackBar(message: 'A reset link have been sent to your email');
+
+      context.pop();
+    } on FirebaseAuthException catch (e) {
+      EasyLoading.dismiss();
+
+      if (e.code == 'user-not-found') {
+        showCustomSnackBar(message: 'User not found. Please check your email.');
+      } else if (e.code == 'invalid-email') {
+        showCustomSnackBar(message: 'Invalid email address.');
+      } else {
+        showCustomSnackBar(message: 'An error occurred: ${e.message}');
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+
+      showCustomSnackBar(message: e.toString());
+    }
   }
 }
