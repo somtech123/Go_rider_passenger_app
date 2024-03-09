@@ -1,16 +1,5 @@
-# go_rider
+# Go_Rider Passenger App
 
-A new Flutter project.
+Go_rider is a cap booking app that allow users to easily book a ride with just a few clicks on their smartphone. it connects passengers with nearby taxi drivers, offering a reliable and efficient transportation solution.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The app typically provides a range of features such as real-time tracking of the ride, estimated arrival time, fare calculation, multtple payment option and rating system to ensure the quality of services
