@@ -24,6 +24,7 @@ The app typically provides a range of features such as real-time tracking of the
 ## Todo
 
 - Rider App
+- Social Medial Authentication
 - user privacy
 - Bill payment 
 - Referral and incentives
