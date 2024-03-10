@@ -19,7 +19,7 @@ dependencies:
   go_router: ^13.0.1
   provider: ^6.0.5
   
-  google_maps_flutter: ^2.4.0
+  google_maps_flutter: 2.2.6
   
   flutter_screenutil: ^5.3.1
   flutter_svg: ^2.0.7

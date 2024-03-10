@@ -54,4 +54,6 @@ class FirebaseRepository {
   Future<void> rateRider(
           {required Map<String, dynamic> payload, required String riderId}) =>
       _firebaseMethod.rateRider(riderId: riderId, payload: payload);
+
+  Future<double> getRating(String id) async => _firebaseMethod.getRating(id);
 }

@@ -48,6 +48,8 @@ class HomePageState {
 
   String? uid;
 
+  double? riderRating;
+
   HomePageState({
     this.loadingState = LoadingState.initial,
     this.riderLoadingState = LoadingState.initial,
@@ -68,29 +70,30 @@ class HomePageState {
     this.rider,
     this.uid,
     this.currentRider,
+    this.riderRating,
   });
 
-  HomePageState copyWith({
-    LoadingState? loadingState,
-    LatLng? currentLocation,
-    Completer<GoogleMapController>? mapController,
-    UserModel? userModel,
-    Set<Marker>? markers,
-    List<LatLng>? plineCoordinate,
-    TextEditingController? pickUpAddress,
-    TextEditingController? destinationAddress,
-    LatLng? destinationLocation,
-    Map<PolylineId, Polyline>? polyline,
-    List<RiderModel>? rider,
-    LocationModel? riderLocation,
-    LoadingState? riderLoadingState,
-    bool? onCameraMove,
-    LoadingState? arrivingTimeState,
-    int? arivalDuration,
-   BookingState? bookingRideState,
-    String? uid,
-    RiderModel? currentRider,
-  }) =>
+  HomePageState copyWith(
+          {LoadingState? loadingState,
+          LatLng? currentLocation,
+          Completer<GoogleMapController>? mapController,
+          UserModel? userModel,
+          Set<Marker>? markers,
+          List<LatLng>? plineCoordinate,
+          TextEditingController? pickUpAddress,
+          TextEditingController? destinationAddress,
+          LatLng? destinationLocation,
+          Map<PolylineId, Polyline>? polyline,
+          List<RiderModel>? rider,
+          LocationModel? riderLocation,
+          LoadingState? riderLoadingState,
+          bool? onCameraMove,
+          LoadingState? arrivingTimeState,
+          int? arivalDuration,
+          BookingState? bookingRideState,
+          String? uid,
+          RiderModel? currentRider,
+          double? riderRating}) =>
       HomePageState(
           loadingState: loadingState ?? this.loadingState,
           riderLoadingState: riderLoadingState ?? this.riderLoadingState,
@@ -110,6 +113,7 @@ class HomePageState {
           arrivingTimeState: arrivingTimeState ?? this.arrivingTimeState,
           bookingRideState: bookingRideState ?? this.bookingRideState,
           uid: uid ?? this.uid,
+          riderRating: riderRating ?? this.riderRating,
           currentRider: currentRider ?? this.currentRider);
 
   @override
@@ -132,6 +136,7 @@ class HomePageState {
         arivalDuration,
         arrivingTimeState,
         bookingRideState,
-        currentRider
+        currentRider,
+        riderRating
       ];
 }

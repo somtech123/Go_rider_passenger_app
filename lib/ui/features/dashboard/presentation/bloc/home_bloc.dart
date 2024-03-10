@@ -14,6 +14,7 @@ import 'package:flutter_google_places_hoc081098/google_maps_webservice_places.da
     as mapServices;
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_rider/app/helper/booking_state_helper.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
@@ -162,21 +163,18 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
   getLocationUpdate() async {
     bool serviceEnabled;
-    PermissionStatus permissionGranted;
+    LocationPermission permission;
 
-    serviceEnabled = await _locationctr.serviceEnabled();
-    if (serviceEnabled) {
-      serviceEnabled = await _locationctr.requestService();
-    } else {
-      return;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      await Geolocator.requestPermission();
     }
-    permissionGranted = await _locationctr.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await _locationctr.requestPermission();
 
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      await Geolocator.requestPermission();
     }
 
     locationStream = _locationctr.onLocationChanged
@@ -292,7 +290,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
   }
 
   getRiderLocation(String id) async {
-    emit(state.copyWith(riderLoadingState: LoadingState.loading));
+    emit(state.copyWith(
+        riderLoadingState: LoadingState.loading, riderRating: 0.0));
+
+    double riderRating = await _firebaseRepository.getRating(id);
 
     LocationModel riderLocation = await _firebaseRepository.getLocation(id);
 
@@ -307,8 +308,10 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
           .then((value) => _generatePolyLine(value));
 
       emit(state.copyWith(
-          riderLocation: riderLocation,
-          riderLoadingState: LoadingState.loaded));
+        riderLocation: riderLocation,
+        riderLoadingState: LoadingState.loaded,
+        riderRating: riderRating,
+      ));
     } else {
       emit(state.copyWith(
           riderLocation: null, riderLoadingState: LoadingState.error));

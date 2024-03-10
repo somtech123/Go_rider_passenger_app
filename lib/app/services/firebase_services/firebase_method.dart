@@ -7,6 +7,7 @@ import 'package:go_rider/app/resouces/app_logger.dart';
 import 'package:go_rider/app/services/notification/notification_repo_implementation.dart';
 import 'package:go_rider/app/services/notification/usecase.dart';
 import 'package:go_rider/ui/features/dashboard/data/location_model.dart';
+import 'package:go_rider/ui/features/dashboard/data/rating_model.dart';
 import 'package:go_rider/ui/features/dashboard/data/rider_model.dart';
 import 'package:go_rider/ui/features/history/data/history_model.dart';
 
@@ -204,5 +205,33 @@ class FirebaseMethod {
     } catch (e) {
       log.e(e);
     }
+  }
+
+  Future<double> getRating(String id) async {
+    List<RatingModel> userdata = [];
+    double averageRating = 0.0;
+
+    try {
+      var snap = await _riderCollection.doc(id).collection('rating').get();
+
+      userdata = snap.docs
+          .map((DocumentSnapshot<Map<String, dynamic>> e) =>
+              RatingModel.fromJson(e.data()!))
+          .toList();
+
+      if (userdata.isNotEmpty) {
+        // Calculate the average rating
+        double totalRating = userdata.fold(
+            0,
+            (previousValue, element) =>
+                previousValue + (element.rating ?? 0).toDouble());
+
+        averageRating = totalRating / userdata.length.toDouble();
+      }
+    } catch (e) {
+      log.d(e.toString());
+    }
+
+    return averageRating;
   }
 }
