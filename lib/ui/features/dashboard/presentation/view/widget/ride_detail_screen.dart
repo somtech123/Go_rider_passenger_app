@@ -286,7 +286,10 @@ Widget _detailContainer(BuildContext context,
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
                           color: AppColor.darkColor)),
-                  Text('${state.arivalDuration} Min',
+                  Text(
+                      //''
+                      '${state.arivalDuration} Min'
+                      ,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w400,
                           fontSize: 16,

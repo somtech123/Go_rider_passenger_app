@@ -115,7 +115,7 @@ Widget _historyCard(
                     .copyWith(fontWeight: FontWeight.w500, fontSize: 14),
               ),
               trailing: Text(
-                "Usd$price",
+                "USD$price",
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!

@@ -27,11 +27,17 @@ class AccountLoadedStateView extends StatefulWidget {
 
 class _AccountLoadedStateViewState extends State<AccountLoadedStateView> {
   TextEditingController? nameCtr;
+  TextEditingController? emailCtr;
+  TextEditingController? phoneCtr;
 
   @override
   void initState() {
     super.initState();
     nameCtr = TextEditingController(text: widget.state.userModel!.username);
+
+    emailCtr = TextEditingController(text: widget.state.userModel!.email);
+
+    phoneCtr = TextEditingController(text: widget.state.userModel!.phoneNumber);
   }
 
   @override
@@ -136,7 +142,53 @@ class _AccountLoadedStateViewState extends State<AccountLoadedStateView> {
                   },
                   textInputAction: TextInputAction.next,
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 20.h),
+                AbsorbPointer(
+                  absorbing: true,
+                  child: AppTextField(
+                    hintText: 'Phone Number',
+                    controller: phoneCtr,
+                    keyboardType: TextInputType.phone,
+                    enableInteractiveSelection: false,
+                    prefixIcon: Platform.isIOS
+                        ? const Icon(CupertinoIcons.phone)
+                        : const Icon(Icons.phone),
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return 'This Field is required';
+                      }
+                      return null;
+                    },
+                    onFieldSubmitted: (p0) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                AbsorbPointer(
+                  absorbing: true,
+                  child: AppTextField(
+                    hintText: 'Email',
+                    controller: emailCtr,
+                    enableInteractiveSelection: false,
+                    prefixIcon: Platform.isIOS
+                        ? const Icon(CupertinoIcons.mail)
+                        : const Icon(Icons.mail),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return 'This Field is required';
+                      }
+                      return null;
+                    },
+                    onFieldSubmitted: (p0) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    textInputAction: TextInputAction.next,
+                  ),
+                ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),

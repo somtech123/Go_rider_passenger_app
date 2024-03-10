@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     initiAnimation()
-        .then((value) => Future.delayed(const Duration(milliseconds: 2000), () {
+        .then((value) => Future.delayed(const Duration(milliseconds: 3000), () {
               checkIfUserIsLoggedIn();
             }));
   }
