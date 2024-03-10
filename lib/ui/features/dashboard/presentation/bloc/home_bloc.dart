@@ -233,6 +233,9 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
     Set<Marker> markers = state.markers;
 
+    markers
+        .removeWhere((element) => element.markerId.value == 'current_location');
+
     markers.add(currentpositionMarker);
 
     emit(state.copyWith(markers: markers));
@@ -253,15 +256,11 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
       travelMode: TravelMode.driving,
     );
 
-    log.w(result);
-
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
         plineCoordinate.add(LatLng(point.latitude, point.longitude));
       }
-    } else {
-      log.e(result.errorMessage);
-    }
+    } else {}
     emit(state.copyWith(plineCoordinate: plineCoordinate));
 
     return plineCoordinate;
@@ -363,7 +362,6 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
         Set<Marker> markers = state.markers;
         markers = Set.of([currentLocationMarker]);
-        //     markers.add(currentLocationMarker);
 
         emit(state.copyWith(
           markers: markers,
