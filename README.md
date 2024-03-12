@@ -40,7 +40,7 @@ Clone these repository
 
 ```bash
   
-  git clone https://github.com/somtech123/Go_rider
+  git clone https://github.com/somtech123/Go_rider_passenger_app
   fork the repository
 ```
 
