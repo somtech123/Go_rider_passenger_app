@@ -24,6 +24,7 @@ The app typically provides a range of features such as real-time tracking of the
 ## Todo
 
 - Rider App
+- Social Medial Authentication
 - user privacy
 - Bill payment 
 - Referral and incentives
@@ -31,7 +32,7 @@ The app typically provides a range of features such as real-time tracking of the
 ## Installation
 
 Android apk file for testing:
-[Android Apk](https://drive.google.com/file/d/1B_HPh_uFyTZuw-qh1pgAOFL7cVH028Ac/view?usp=sharing)
+[Android Apk](https://drive.google.com/file/d/1j6cYrxIZMg4aHg02dQr0_4-IzQrqi3CJ/view?usp=sharing)
 ## Run Locally
 
 
@@ -39,7 +40,7 @@ Clone these repository
 
 ```bash
   
-  git clone https://github.com/somtech123/Go_rider
+  git clone https://github.com/somtech123/Go_rider_passenger_app
   fork the repository
 ```
 
@@ -58,12 +59,13 @@ Install dependencies
   follow the step on the Environment Variables  below to set up .env file 
 ```
 
-Run the project 
+Run the project on Development mode
 
 ```bash
-  flutter run 
-  or build an apk with flutter build apk --split-per-abi
+  flutter run -t lib/main_dev.dart --flavor dev
+  or flutter build apk -t lib/main_dev.dart --flavor=dev --dev
 ```
+
 
 ## Environment Variables
 
