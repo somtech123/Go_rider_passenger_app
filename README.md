@@ -59,12 +59,13 @@ Install dependencies
   follow the step on the Environment Variables  below to set up .env file 
 ```
 
-Run the project 
+Run the project on Development mode
 
 ```bash
-  flutter run 
-  or build an apk with flutter build apk --split-per-abi
+  flutter run -t lib/main_dev.dart --flavor dev
+  or flutter build apk -t lib/main_dev.dart --flavor=dev --dev
 ```
+
 
 ## Environment Variables
 
