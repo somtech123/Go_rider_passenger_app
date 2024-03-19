@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_rider/main.dart';
+import 'package:go_rider/app/resouces/app_logger.dart';
+
+var log = getLogger('app_wrapper');
 
 class AppMainWrapper extends StatefulWidget {
   const AppMainWrapper({

@@ -61,6 +61,21 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        prod {
+            resValue "string", "app_name", "Go_Rider"
+        }
+
+        dev {
+            resValue "string", "app_name", "Go_Rider_Dev"
+            applicationIdSuffix ".dev"
+
+        }
+
+    }
 }
 
 flutter {

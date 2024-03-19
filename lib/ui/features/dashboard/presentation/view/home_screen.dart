@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +15,8 @@ import 'package:go_rider/ui/features/dashboard/presentation/view/state_view.dart
 import 'package:go_rider/ui/features/dashboard/presentation/view/widget/home_screen_drawer.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/app_constant/app_string.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,6 +37,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // sendmail() async {
+  //   // Note that using a username and password for gmail only works if
+  //   // you have two-factor authentication enabled and created an App password.
+  //   // Search for "gmail app password 2fa"
+  //   // The alternative is to use oauth.
+  //   String username = '';
+  //   String password = 'password';
+
+  //   final smtpServer = SmtpServer('smtp.domain.com', x);
+  //   //gmail(username, password);
+  //   // Use the SmtpServer class to configure an SMTP server:
+  //   // final smtpServer = SmtpServer('smtp.domain.com');
+  //   // See the named arguments of SmtpServer for further configuration
+  //   // options.
+
+  //   // Create our message.
+  //   final message = Message()
+  //     ..from = Address(username, 'Your name')
+  //     ..recipients.add('oscarchisom11@gmail.com')
+  //     ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+  //     ..bccRecipients.add(Address('bccAddress@example.com'))
+  //     ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
+  //     ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+  //     ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+
+  //   try {
+  //     final sendReport = await send(message, smtpServer);
+  //     print('Message sent: ' + sendReport.toString());
+  //   } on MailerException catch (e) {
+  //     print('Message not sent.');
+  //     for (var p in e.problems) {
+  //       print('Problem: ${p.code}: ${p.msg}');
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
