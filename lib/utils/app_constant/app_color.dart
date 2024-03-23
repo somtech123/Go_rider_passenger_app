@@ -11,4 +11,6 @@ class AppColor {
   static const Color darkColor = Colors.black;
 
   static const Color buttonOverlay = Color(0xffE2F3FF);
+
+  static Color transparent = Colors.transparent;
 }

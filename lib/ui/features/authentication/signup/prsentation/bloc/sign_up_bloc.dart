@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/app/services/auth_services/auth_repo.dart';
 import 'package:go_rider/ui/features/authentication/signup/prsentation/bloc/sign_up_event.dart';
 import 'package:go_rider/ui/features/authentication/signup/prsentation/bloc/sign_up_state.dart';
 import 'package:go_rider/ui/shared/shared_widget/custom_snackbar.dart';
@@ -39,6 +40,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final AuthRepository _authRepository = AuthRepository();
 
   Future<void> signup(BuildContext context,
       {required String email,
@@ -108,5 +111,26 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       'profileImage': '',
       'phone': phone
     });
+  }
+
+  googleSigin() async {
+    try {
+      UserCredential? cred = await _authRepository.getGooglecredential();
+      if (cred != null) {
+        if (cred.additionalUserInfo!.isNewUser) {}
+      } else {}
+    } on FirebaseAuthException catch (e) {
+      EasyLoading.dismiss();
+      emit(state.copyWith(
+          loadingState: LoadingState.error,
+          signUpMessage: 'an error occured try again later'));
+      showCustomSnackBar(message: e.toString());
+    } catch (e) {
+      EasyLoading.dismiss();
+      emit(state.copyWith(
+          loadingState: LoadingState.error,
+          signUpMessage: 'an error occured try again later'));
+      showCustomSnackBar(message: e.toString());
+    }
   }
 }

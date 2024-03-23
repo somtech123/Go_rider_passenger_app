@@ -38,8 +38,10 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
-  firebase_messaging: 
+  firebase_messaging:
+  google_sign_in: 
   flutter_local_notifications: ^16.3.2
+
   
   firebase_storage: ^11.6.0
   fluttertoast: ^8.2.4
@@ -50,6 +52,7 @@ dependencies:
   flutter_timezone: ^1.0.7
   flutter_app_badger: ^1.5.0
   mailer: ^6.1.0
+  lottie: ^2.7.0
    
 
 dependency_overrides:
@@ -72,6 +75,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/svgs/ 
+    - assets/gifs/ 
     - assets/images/gorider.jpg
     - .env
 
