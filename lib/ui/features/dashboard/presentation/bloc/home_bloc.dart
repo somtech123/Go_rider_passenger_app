@@ -240,7 +240,7 @@ class HomePageBloc extends Bloc<HomePageBlocEvent, HomePageState> {
 
     emit(state.copyWith(markers: markers));
   }
-
+ 
   Future<List<LatLng>> _getPolyPointCordinate(LatLng destination) async {
     emit(state.copyWith(plineCoordinate: []));
 

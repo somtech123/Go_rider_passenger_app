@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_rider/utils/app_constant/app_color.dart';
 import 'package:go_rider/utils/utils/device_utils.dart';
 import 'package:go_router/go_router.dart';
-
+  
 // ignore: must_be_immutable
 class FullTopBarWidget extends StatelessWidget implements PreferredSizeWidget {
   FullTopBarWidget(
