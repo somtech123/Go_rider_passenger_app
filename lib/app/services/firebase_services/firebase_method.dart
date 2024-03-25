@@ -234,4 +234,19 @@ class FirebaseMethod {
 
     return averageRating;
   }
+
+  Future<void> createFireStoreUser(
+      {required String uid,
+      required String username,
+      required String email,
+      required String phone}) async {
+    await _firestore.collection("users").doc(uid).set({
+      "userName": username,
+      'id': uid,
+      'email': email,
+      "dateCreated": DateTime.now().toIso8601String(),
+      'profileImage': '',
+      'phone': phone
+    });
+  }
 }

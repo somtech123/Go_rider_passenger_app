@@ -3,12 +3,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_rider/app/helper/local_state_helper.dart';
 import 'package:go_rider/app/resouces/app_logger.dart';
+import 'package:go_rider/app/services/auth_services/auth_repo.dart';
+import 'package:go_rider/app/services/firebase_services/firebase_repository.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_event.dart';
 import 'package:go_rider/ui/features/authentication/login/presentation/bloc/login_state.dart';
-import 'package:go_rider/ui/shared/shared_widget/custom_snackbar.dart';
+import 'package:go_rider/ui/shared/dialog/error_diaglog.dart';
+import 'package:go_rider/ui/shared/dialog/loading_widget.dart';
+import 'package:go_rider/ui/shared/dialog/success_diaglog.dart';
 import 'package:go_router/go_router.dart';
 
 var log = getLogger('Login_bloc');
@@ -24,9 +27,15 @@ class LoginBloc extends Bloc<LoginEvenet, LoginState> {
     on<ResetPassword>((event, emit) async {
       await forgottenPassword(event.context, email: event.email);
     });
+
+    on<GoogleSignin>((event, emit) async => googleSigin(event.context));
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final AuthRepository _authRepository = AuthRepository();
+
+  final FirebaseRepository _firebaseRepository = FirebaseRepository();
 
   obsureText() {
     emit(state.copyWith(isVisible: !state.isVisible!));
@@ -37,53 +46,73 @@ class LoginBloc extends Bloc<LoginEvenet, LoginState> {
     required String email,
     required String password,
   }) async {
-    log.w('staring the registration process');
-
-    EasyLoading.show(status: 'loading...');
+    showloader(context);
 
     emit(state.copyWith(loadingState: LoadingState.loading));
 
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
 
-      EasyLoading.showSuccess('Successfully Login');
+      context.pop();
 
       context.replace('/homePage');
     } on FirebaseAuthException catch (e) {
-      EasyLoading.dismiss();
-      showCustomSnackBar(message: e.message!);
-    } catch (e) {
-      EasyLoading.dismiss();
+      context.pop();
 
-      showCustomSnackBar(message: e.toString());
+      showErrorDialog(context, message: e.message!);
+    } catch (e) {
+      context.pop();
+
+      showErrorDialog(context, message: e.toString());
     }
   }
 
   forgottenPassword(BuildContext context, {required String email}) async {
+    showloader(context);
     try {
-      EasyLoading.show(status: 'loading...');
-
       await _auth.sendPasswordResetEmail(email: email);
 
-      EasyLoading.dismiss();
-
-      showCustomSnackBar(message: 'A reset link have been sent to your email');
-
       context.pop();
+
+      showSuccessDialog(context,
+          message: 'A reset link have been sent to your email');
     } on FirebaseAuthException catch (e) {
-      EasyLoading.dismiss();
+      context.pop();
 
       if (e.code == 'user-not-found') {
-        showCustomSnackBar(message: 'User not found. Please check your email.');
+        showErrorDialog(context,
+            message: 'User not found. Please check your email.');
       } else if (e.code == 'invalid-email') {
-        showCustomSnackBar(message: 'Invalid email address.');
+        showErrorDialog(context, message: 'Invalid email address.');
       } else {
-        showCustomSnackBar(message: 'An error occurred: ${e.message}');
+        showErrorDialog(context, message: 'An error occurred: ${e.message}');
       }
     } catch (e) {
-      EasyLoading.dismiss();
+      context.pop();
+      showErrorDialog(context, message: e.toString());
+    }
+  }
 
-      showCustomSnackBar(message: e.toString());
+  googleSigin(BuildContext context) async {
+    try {
+      UserCredential? cred = await _authRepository.getGooglecredential();
+      if (cred != null) {
+        if (cred.additionalUserInfo!.isNewUser) {
+          await _firebaseRepository.createFireStoreUser(
+              uid: _auth.currentUser!.uid,
+              username: cred.user!.displayName!,
+              email: cred.user!.email!,
+              phone: cred.user!.phoneNumber!);
+
+          context.replace('/homePage');
+        }
+      } else {
+        showErrorDialog(context, message: 'an error occured try again later');
+      }
+    } on FirebaseAuthException catch (e) {
+      showErrorDialog(context, message: e.message!);
+    } catch (e) {
+      showErrorDialog(context, message: e.toString());
     }
   }
 }

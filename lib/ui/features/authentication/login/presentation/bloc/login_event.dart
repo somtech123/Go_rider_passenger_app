@@ -29,3 +29,11 @@ class ResetPassword extends LoginEvenet {
   @override
   List<Object?> get props => [email, context];
 }
+
+class GoogleSignin extends LoginEvenet {
+  BuildContext context;
+
+  GoogleSignin(this.context);
+  @override
+  List<Object?> get props => [context];
+}

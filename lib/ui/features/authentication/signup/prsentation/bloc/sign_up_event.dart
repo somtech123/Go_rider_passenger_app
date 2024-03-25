@@ -1,9 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 abstract class SignUpEvent extends Equatable {}
 
-// ignore: must_be_immutable
 class SignUp extends SignUpEvent {
   final String email;
   final String password;
@@ -22,4 +23,12 @@ class SignUp extends SignUpEvent {
 class ObsureText extends SignUpEvent {
   @override
   List<Object?> get props => [];
+}
+
+class GoogleSignin extends SignUpEvent {
+  BuildContext context;
+
+  GoogleSignin(this.context);
+  @override
+  List<Object?> get props => [context];
 }

@@ -253,7 +253,7 @@ class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
                     socilaButton(
                       context,
                       ontap: () {
-                        log.w('google clicked');
+                        signupBloc.add(GoogleSignin(context));
                       },
                       text: AppStrings.googleConnect,
                       leading: Image.asset(
