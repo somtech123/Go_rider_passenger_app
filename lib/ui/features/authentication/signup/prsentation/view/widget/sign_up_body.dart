@@ -29,7 +29,7 @@ class SignUpBodyWidget extends StatefulWidget {
 }
 
 class _SignUpBodyWidgetState extends State<SignUpBodyWidget> {
-  static final formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late FocusNode passwordNode;
   late FocusNode usernameNode;

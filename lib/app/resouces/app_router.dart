@@ -20,7 +20,7 @@ class AppRouter {
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
       GoRoute(
           path: '/login',
-          pageBuilder: (context, state) => CustomSlideTransition(
+          pageBuilder: (context, state) => CustomNormalPageTransition(
               child: const LoginScreen(), key: state.pageKey)),
       GoRoute(
           path: '/homePage',
@@ -28,7 +28,8 @@ class AppRouter {
               child: const HomeScreen(), key: state.pageKey)),
       GoRoute(
         path: '/signUp',
-        builder: (context, state) => const SignUpScreen(),
+        pageBuilder: (context, state) => CustomNormalPageTransition(
+            child: const SignUpScreen(), key: state.pageKey),
       ),
       GoRoute(
           path: '/passwordReset',

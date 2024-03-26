@@ -30,7 +30,7 @@ class LoginBodyView extends StatefulWidget {
 }
 
 class _LoginBodyViewState extends State<LoginBodyView> {
-  static final formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late FocusNode passwordNode;
   late FocusNode emailNode;
